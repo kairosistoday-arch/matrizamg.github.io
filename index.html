@@ -822,11 +822,85 @@ function markDone(idx) {
   document.getElementById('pill_' + idx).classList.remove('active');
 }
 
-// ── Export ──
-function copyJSON() {
+// ── Webhook ──
+const WEBHOOK = 'https://script.google.com/macros/s/AKfycbxiKu2P_PIVY2igK_ltJUd2ixFaP3DNKNy001mCQC8plleQrf8JoOgPIX9F_ePkdpah/exec';
+
+function buildPayload() {
   calcAuto();
   const payload = {};
   SECTIONS.forEach(sec => sec.fields.forEach(f => { payload[f.key] = data[f.key] || ''; }));
+  return payload;
+}
+
+async function submitToSheets() {
+  const btn = document.getElementById('btnSubmit');
+  const statusEl = document.getElementById('submitStatus');
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+  statusEl.innerHTML = '';
+
+  const payload = buildPayload();
+
+  // Guardar en localStorage como respaldo
+  const draft = JSON.parse(localStorage.getItem('amg_drafts') || '[]');
+  draft.push({ ...payload, _saved: new Date().toISOString() });
+  localStorage.setItem('amg_drafts', JSON.stringify(draft));
+
+  try {
+    const res = await fetch(WEBHOOK, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    statusEl.innerHTML = `<div class="alert alert-success"><span class="alert-icon">✅</span><div class="alert-body"><strong>Guardado en Google Sheets.</strong> El cierre fue registrado correctamente. También quedó una copia local de respaldo.</div></div>`;
+    btn.textContent = '✓ Guardado';
+    btn.className = 'btn btn-success';
+    // Limpiar borrador activo
+    localStorage.removeItem('amg_draft_active');
+  } catch (err) {
+    statusEl.innerHTML = `<div class="alert alert-warn"><span class="alert-icon">⚠️</span><div class="alert-body"><strong>Sin conexión.</strong> Los datos se guardaron localmente. Se enviarán a Sheets cuando haya conexión.</div></div>`;
+    btn.textContent = 'Reintentar';
+    btn.disabled = false;
+  }
+}
+
+// ── localStorage draft autosave ──
+function saveDraft() {
+  const payload = buildPayload();
+  localStorage.setItem('amg_draft_active', JSON.stringify(payload));
+}
+
+function loadDraft() {
+  try {
+    const saved = localStorage.getItem('amg_draft_active');
+    if (!saved) return;
+    const parsed = JSON.parse(saved);
+    Object.assign(data, parsed);
+    // Restaurar campos en el DOM
+    SECTIONS.forEach(sec => sec.fields.forEach(f => {
+      const el = document.getElementById('f_' + f.key);
+      if (!el || f.auto) return;
+      el.value = data[f.key] || '';
+    }));
+    calcAuto();
+    refreshAuto();
+    refreshAlerts();
+    // Mostrar aviso
+    const banner = document.getElementById('draftBanner');
+    if (banner) banner.style.display = 'flex';
+  } catch(e) {}
+}
+
+function clearDraft() {
+  localStorage.removeItem('amg_draft_active');
+  const banner = document.getElementById('draftBanner');
+  if (banner) banner.style.display = 'none';
+}
+
+// ── Export ──
+function copyJSON() {
+  const payload = buildPayload();
   const txt = JSON.stringify(payload, null, 2);
   const box = document.getElementById('exportBox');
   box.textContent = txt;
@@ -845,9 +919,37 @@ function printPage() {
   window.print();
 }
 
+// ── Autosave on input ──
+document.addEventListener('input', () => saveDraft());
+document.addEventListener('change', () => saveDraft());
+
 // ── Init ──
 buildUI();
 goTo(0);
+
+// Inyectar botón submit y banner en sección calidad
+document.querySelector('#panel_6 .section-card-body').insertAdjacentHTML('afterbegin', `
+  <div id="draftBanner" style="display:none;align-items:center;gap:10px;background:var(--info-bg);border:0.5px solid rgba(24,95,165,0.2);border-radius:var(--radius);padding:10px 14px;margin-bottom:1rem;font-size:12px;color:var(--info-text)">
+    <span>📋</span>
+    <span><strong>Borrador recuperado.</strong> Tus datos anteriores fueron restaurados automáticamente.</span>
+    <button onclick="clearDraft()" style="margin-left:auto;font-size:11px;padding:3px 8px;border-radius:4px;border:0.5px solid var(--info-text);background:transparent;color:var(--info-text);cursor:pointer">Descartar</button>
+  </div>`);
+
+// Agregar botón submit al área de export
+setTimeout(() => {
+  const exportArea = document.getElementById('exportBox');
+  if (exportArea) {
+    exportArea.insertAdjacentHTML('beforebegin', `
+      <div id="submitStatus" style="margin-bottom:0.75rem"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:0.75rem">
+        <button id="btnSubmit" class="btn btn-primary" onclick="submitToSheets()">Guardar en Google Sheets</button>
+        <button class="btn" onclick="copyJSON()">Copiar JSON</button>
+        <button class="btn" onclick="printPage()">Imprimir / PDF</button>
+      </div>`);
+  }
+}, 100);
+
+loadDraft();
 </script>
 </body>
 </html>
