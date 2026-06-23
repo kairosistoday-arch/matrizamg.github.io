@@ -3,872 +3,763 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AMG — Cierre de Campaña</title>
+<title>INEL — AMG Cierre de Campaña</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --purple: #7F77DD;
-  --purple-light: #EEEDFE;
-  --purple-mid: #AFA9EC;
-  --teal: #1D9E75;
-  --teal-light: #E1F5EE;
-  --teal-mid: #5DCAA5;
-  --amber: #BA7517;
-  --amber-light: #FAEEDA;
-  --amber-mid: #EF9F27;
-  --blue: #185FA5;
-  --blue-light: #E6F1FB;
-  --blue-mid: #378ADD;
-  --pink: #993556;
-  --pink-light: #FBEAF0;
-  --pink-mid: #D4537E;
-  --gray: #5F5E5A;
-  --gray-light: #F1EFE8;
-  --gray-mid: #888780;
-  --text: #1a1a1a;
-  --text-muted: #6b6b68;
-  --text-hint: #9b9b97;
-  --bg: #f8f7f4;
-  --surface: #ffffff;
-  --border: rgba(0,0,0,0.1);
-  --border-strong: rgba(0,0,0,0.18);
-  --success-bg: #EAF3DE;
-  --success-text: #3B6D11;
-  --danger-bg: #FCEBEB;
-  --danger-text: #A32D2D;
-  --warn-bg: #FAEEDA;
-  --warn-text: #854F0B;
-  --info-bg: #E6F1FB;
-  --info-text: #185FA5;
-  --radius: 8px;
-  --radius-lg: 12px;
+  --blue:      #0857C3;
+  --blue-dark: #063d8f;
+  --blue-light:#e8effc;
+  --teal:      #49C5B1;
+  --teal-light:#e6f8f5;
+  --black:     #3D3935;
+  --gray:      #E0DBE3;
+  --gray-mid:  #b5b0b9;
+  --magenta:   #DB0B5B;
+  --yellow:    #D0DF00;
+  --orange:    #FF6900;
+  --bg:        #f5f4f7;
+  --surface:   #ffffff;
+  --text:      #3D3935;
+  --text-muted:#7a7672;
+  --text-hint: #a8a5a2;
+  --border:    rgba(8,87,195,0.12);
+  --border-strong: rgba(8,87,195,0.22);
+  --success-bg:#e6f8f5; --success-text:#1a7a6a;
+  --danger-bg: #fde8ef; --danger-text:#9b0840;
+  --warn-bg:   #fff4e0; --warn-text:#a05000;
+  --info-bg:   #e8effc; --info-text:#0857C3;
+  --radius:    8px;
+  --radius-lg: 14px;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.6;
-  min-height: 100vh;
-}
-
-/* ── Layout ── */
-.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+/* ── App shell ── */
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
 
 /* ── Sidebar ── */
-.sidebar {
-  background: var(--surface);
-  border-right: 0.5px solid var(--border-strong);
-  padding: 1.5rem 0;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
+.sidebar{background:var(--black);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-brand{padding:1.5rem 1.25rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.brand-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--teal));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;letter-spacing:-0.5px}
+.brand-name{font-size:15px;font-weight:700;color:white;letter-spacing:0.02em}
+.brand-sub{font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:0.04em;text-transform:uppercase}
+.sidebar-section-label{font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);letter-spacing:0.1em;text-transform:uppercase;padding:1.25rem 1.25rem 0.5rem}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 1.25rem;cursor:pointer;border-left:3px solid transparent;transition:background 0.15s,border-color 0.15s}
+.nav-item:hover{background:rgba(255,255,255,0.05)}
+.nav-item.active{border-left-color:var(--teal);background:rgba(73,197,177,0.1)}
+.nav-dot{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,255,255,0.06)}
+.nav-item.active .nav-dot{background:rgba(73,197,177,0.2)}
+.nav-label{font-size:12px;font-weight:500;color:rgba(255,255,255,0.7)}
+.nav-item.active .nav-label{color:white}
+.nav-check{margin-left:auto;width:16px;height:16px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;opacity:0;flex-shrink:0;transition:opacity 0.2s}
+.nav-check svg{width:9px;height:9px;stroke:white;stroke-width:2.5;fill:none}
+.sidebar-footer{margin-top:auto;padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,0.08)}
+.sidebar-tab{display:flex;background:rgba(255,255,255,0.06);border-radius:8px;padding:3px;gap:2px;margin-bottom:0}
+.tab-btn{flex:1;padding:6px;border-radius:6px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.45);background:transparent;border:none;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.tab-btn.active{background:var(--blue);color:white}
 
-.sidebar-logo {
-  padding: 0 1.25rem 1.5rem;
-  border-bottom: 0.5px solid var(--border);
-  margin-bottom: 1rem;
-}
-.sidebar-logo .brand { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: 0.08em; text-transform: uppercase; }
-.sidebar-logo .doc-title { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+/* ── Main ── */
+.main{display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0.875rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.topbar-title{font-size:14px;font-weight:600;color:var(--text)}
+.topbar-meta{font-size:12px;color:var(--text-muted)}
+.progress-track{height:3px;background:var(--gray);flex:1;margin:0 1.5rem;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:2px;transition:width 0.3s}
+.step-counter{font-size:11px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+.content{padding:2rem;flex:1}
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 1.25rem;
-  cursor: pointer;
-  border-left: 3px solid transparent;
-  transition: background 0.15s, border-color 0.15s;
-  position: relative;
-}
-.nav-item:hover { background: var(--bg); }
-.nav-item.active { border-left-color: var(--purple); background: var(--purple-light); }
-.nav-item.done .nav-check { opacity: 1; }
-.nav-icon {
-  width: 28px; height: 28px; border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; flex-shrink: 0;
-}
-.nav-label { font-size: 12px; font-weight: 500; color: var(--text); }
-.nav-sub { font-size: 11px; color: var(--text-muted); }
-.nav-check {
-  margin-left: auto; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--teal); display: flex; align-items: center; justify-content: center;
-  opacity: 0; flex-shrink: 0; transition: opacity 0.2s;
-}
-.nav-check svg { width: 9px; height: 9px; stroke: white; stroke-width: 2.5; fill: none; }
+/* ── View switching ── */
+.view{display:none}
+.view.active{display:block}
 
-.sidebar-footer {
-  margin-top: auto;
-  padding: 1rem 1.25rem 0;
-  border-top: 0.5px solid var(--border);
-}
+/* ── Section card ── */
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.5rem}
+.section-card-header{display:flex;align-items:center;gap:12px;padding:1rem 1.25rem;border-bottom:1px solid var(--border)}
+.section-card-accent{width:4px;height:36px;border-radius:2px;flex-shrink:0}
+.section-card-title{font-size:15px;font-weight:700;color:var(--text)}
+.section-card-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
+.section-card-body{padding:1.25rem}
 
-/* ── Main content ── */
-.main { padding: 2rem; max-width: 820px; }
+/* ── Fields ── */
+.field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem}
+.field-group{display:flex;flex-direction:column;gap:5px}
+.field-group.full{grid-column:1/-1}
+.field-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;display:flex;align-items:center;gap:5px}
+.badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.04em;text-transform:uppercase}
+.badge-auto{background:var(--teal-light);color:#1a7a6a}
+.badge-manual{background:var(--info-bg);color:var(--blue)}
+.badge-req{background:#fff4e0;color:#a05000}
+input[type=text],input[type=number],input[type=date],input[type=url],select,textarea{width:100%;padding:8px 11px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:13px;font-family:'Space Grotesk',inherit;color:var(--text);background:var(--surface);transition:border-color 0.15s,box-shadow 0.15s;appearance:none;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(8,87,195,0.1)}
+input.invalid,select.invalid,textarea.invalid{border-color:var(--magenta);box-shadow:0 0 0 3px rgba(219,11,91,0.1)}
+input[readonly]{background:var(--bg);color:var(--text-muted);cursor:default;border-color:var(--border)}
+input[readonly]:focus{box-shadow:none;border-color:var(--border)}
+select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a7672' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+textarea{resize:vertical;min-height:72px}
+.field-hint{font-size:11px;color:var(--text-hint)}
+.field-error{font-size:11px;color:var(--magenta);display:none}
+.field-error.show{display:block}
 
-.page-header { margin-bottom: 2rem; }
-.page-header h1 { font-size: 22px; font-weight: 600; color: var(--text); }
-.page-header p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+/* ── Alerts ── */
+.alert{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:var(--radius);font-size:12px;margin-top:0.75rem;line-height:1.5}
+.alert-warn{background:var(--warn-bg);color:var(--warn-text);border:1px solid rgba(255,105,0,0.2)}
+.alert-danger{background:var(--danger-bg);color:var(--danger-text);border:1px solid rgba(219,11,91,0.2)}
+.alert-success{background:var(--success-bg);color:var(--success-text);border:1px solid rgba(73,197,177,0.3)}
+.alert-icon{font-size:14px;flex-shrink:0}
+.alert-body strong{font-weight:600}
 
-/* ── Section panel ── */
-.section-panel { display: none; }
-.section-panel.active { display: block; }
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--radius);font-size:13px;font-weight:600;font-family:'Space Grotesk',inherit;cursor:pointer;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);transition:all 0.15s}
+.btn:hover{background:var(--bg)}
+.btn:active{transform:scale(0.98)}
+.btn-primary{background:var(--blue);color:white;border-color:var(--blue)}
+.btn-primary:hover{background:var(--blue-dark);border-color:var(--blue-dark)}
+.btn-teal{background:var(--teal);color:white;border-color:var(--teal)}
+.btn-teal:hover{background:#3aaa98}
+.btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
 
-.section-card {
-  background: var(--surface);
-  border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-}
-.section-card-header {
-  display: flex; align-items: center; gap: 12px;
-  padding: 1rem 1.25rem;
-  border-bottom: 0.5px solid var(--border);
-}
-.section-card-icon {
-  width: 36px; height: 36px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-}
-.section-card-title { font-size: 15px; font-weight: 600; }
-.section-card-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
-.section-card-body { padding: 1.25rem; }
-
-/* ── Field grid ── */
-.field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
-.field-group { display: flex; flex-direction: column; gap: 5px; }
-.field-group.full { grid-column: 1 / -1; }
-
-.field-label {
-  font-size: 11px; font-weight: 600; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.05em;
-  display: flex; align-items: center; gap: 5px;
-}
-.badge {
-  font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 4px;
-  letter-spacing: 0.04em; text-transform: uppercase;
-}
-.badge-auto { background: var(--success-bg); color: var(--success-text); }
-.badge-manual { background: var(--info-bg); color: var(--info-text); }
-.badge-req { background: var(--warn-bg); color: var(--warn-text); }
-
-input[type=text], input[type=number], input[type=date], input[type=url], select, textarea {
-  width: 100%; padding: 8px 11px;
-  border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius);
-  font-size: 13px; font-family: inherit;
-  color: var(--text); background: var(--surface);
-  transition: border-color 0.15s, box-shadow 0.15s;
-  appearance: none; -webkit-appearance: none;
-}
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: var(--purple);
-  box-shadow: 0 0 0 3px rgba(127,119,221,0.12);
-}
-input.invalid, select.invalid, textarea.invalid {
-  border-color: #E24B4A;
-  box-shadow: 0 0 0 3px rgba(226,75,74,0.1);
-}
-input[readonly] {
-  background: var(--bg);
-  color: var(--text-muted);
-  cursor: default;
-  border-color: var(--border);
-}
-input[readonly]:focus { box-shadow: none; border-color: var(--border); }
-select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b68' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-textarea { resize: vertical; min-height: 72px; }
-
-.field-hint { font-size: 11px; color: var(--text-hint); }
-.field-error { font-size: 11px; color: #A32D2D; display: none; }
-.field-error.show { display: block; }
-
-/* ── Alert banners ── */
-.alert {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 10px 14px; border-radius: var(--radius);
-  font-size: 12px; margin-top: 0.75rem; line-height: 1.5;
-}
-.alert-warn { background: var(--warn-bg); color: var(--warn-text); border: 0.5px solid rgba(186,117,23,0.25); }
-.alert-danger { background: var(--danger-bg); color: var(--danger-text); border: 0.5px solid rgba(163,45,45,0.25); }
-.alert-success { background: var(--success-bg); color: var(--success-text); border: 0.5px solid rgba(59,109,17,0.25); }
-.alert-icon { font-size: 14px; flex-shrink: 0; margin-top: 0; }
-.alert-body strong { font-weight: 600; }
-
-/* ── KPI cards ── */
-.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-.kpi-card {
-  background: var(--bg);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  border: 0.5px solid var(--border);
-}
-.kpi-card-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-.kpi-card-value { font-size: 20px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
-.kpi-card-sub { font-size: 10px; color: var(--text-hint); margin-top: 2px; }
-
-/* ── Progress bar ── */
-.progress-track {
-  height: 3px; background: var(--border);
-  border-radius: 2px; margin: 0.75rem 0 1.5rem; overflow: hidden;
-}
-.progress-fill { height: 100%; background: var(--purple); border-radius: 2px; transition: width 0.3s; }
-
-/* ── Navigation ── */
-.nav-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 9px 18px; border-radius: var(--radius);
-  font-size: 13px; font-weight: 500; font-family: inherit;
-  cursor: pointer; border: 0.5px solid var(--border-strong);
-  background: var(--surface); color: var(--text);
-  transition: background 0.15s, border-color 0.15s, transform 0.1s;
-}
-.btn:hover { background: var(--bg); }
-.btn:active { transform: scale(0.98); }
-.btn-primary {
-  background: var(--purple); color: white; border-color: var(--purple);
-}
-.btn-primary:hover { background: #6b63c5; border-color: #6b63c5; }
-.btn-success {
-  background: var(--teal); color: white; border-color: var(--teal);
-}
-.btn-success:hover { background: #0F6E56; border-color: #0F6E56; }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
-
-/* ── ID Campana badge ── */
-.id-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 12px; border-radius: var(--radius);
-  background: var(--purple-light); color: #3C3489;
-  font-size: 13px; font-weight: 600; font-family: monospace;
-  border: 0.5px solid var(--purple-mid);
-}
-
-/* ── Export / Summary ── */
-.summary-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.summary-table th { text-align: left; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; padding: 6px 8px; border-bottom: 0.5px solid var(--border-strong); }
-.summary-table td { padding: 7px 8px; border-bottom: 0.5px solid var(--border); color: var(--text); }
-.summary-table td:first-child { color: var(--text-muted); width: 55%; }
-.summary-table tr:last-child td { border-bottom: none; }
-.summary-table td.mono { font-family: monospace; }
-
-.export-box {
-  background: #1a1a1a; color: #c9d1d9;
-  border-radius: var(--radius); padding: 1rem;
-  font-size: 11px; font-family: monospace;
-  white-space: pre-wrap; word-break: break-all;
-  max-height: 280px; overflow-y: auto; margin-top: 1rem;
-  display: none;
-}
-
-/* ── Divider ── */
-.divider { border: none; border-top: 0.5px solid var(--border); margin: 1.25rem 0; }
+/* ── Nav actions ── */
+.nav-actions{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
 
 /* ── Validation summary ── */
-.val-summary {
-  background: var(--danger-bg); border: 0.5px solid rgba(163,45,45,0.2);
-  border-radius: var(--radius); padding: 10px 14px;
-  font-size: 12px; color: var(--danger-text);
-  margin-bottom: 1rem; display: none;
-}
-.val-summary ul { margin: 6px 0 0 1rem; }
-.val-summary li { margin-top: 3px; }
+.val-summary{background:var(--danger-bg);border:1px solid rgba(219,11,91,0.2);border-radius:var(--radius);padding:10px 14px;font-size:12px;color:var(--danger-text);margin-bottom:1rem;display:none}
+.val-summary ul{margin:6px 0 0 1rem}
+.val-summary li{margin-top:3px}
 
-/* ── Section step pills ── */
-.step-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
-.step-pill {
-  display: flex; align-items: center; gap: 4px;
-  padding: 4px 10px; border-radius: 20px;
-  font-size: 11px; font-weight: 500;
-  cursor: pointer; border: 0.5px solid var(--border-strong);
-  background: var(--surface); color: var(--text-muted);
-  transition: all 0.15s;
-}
-.step-pill.active { background: var(--purple); color: white; border-color: var(--purple); }
-.step-pill.done { background: var(--teal-light); color: var(--teal); border-color: var(--teal-mid); }
+/* ── Divider ── */
+.divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
 
-@media (max-width: 680px) {
-  .app { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
-  .main { padding: 1rem; }
-  .step-pills { display: flex; }
+/* ── ID badge ── */
+.id-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius);background:var(--blue-light);color:var(--blue);font-size:13px;font-weight:700;font-family:monospace;border:1px solid rgba(8,87,195,0.2)}
+
+/* ── Summary table ── */
+.summary-table{width:100%;border-collapse:collapse;font-size:12px}
+.summary-table th{text-align:left;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;padding:6px 8px;border-bottom:2px solid var(--border-strong)}
+.summary-table td{padding:7px 8px;border-bottom:1px solid var(--border);color:var(--text)}
+.summary-table td:first-child{color:var(--text-muted);width:55%}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table td.mono{font-family:monospace;font-weight:600}
+
+/* ── Export box ── */
+.export-box{background:#1e1e2e;color:#cdd6f4;border-radius:var(--radius);padding:1rem;font-size:11px;font-family:monospace;white-space:pre-wrap;word-break:break-all;max-height:240px;overflow-y:auto;margin-top:1rem;display:none}
+
+/* ── Draft banner ── */
+.draft-banner{display:none;align-items:center;gap:10px;background:var(--info-bg);border:1px solid rgba(8,87,195,0.2);border-radius:var(--radius);padding:10px 14px;margin-bottom:1rem;font-size:12px;color:var(--info-text)}
+
+/* ════════════════════════════════════
+   DASHBOARD
+════════════════════════════════════ */
+.dash-header{margin-bottom:1.5rem}
+.dash-header h2{font-size:20px;font-weight:700;color:var(--text)}
+.dash-header p{font-size:13px;color:var(--text-muted);margin-top:3px}
+
+/* KPI strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:1.5rem}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-blue::before{background:var(--blue)}
+.kpi-teal::before{background:var(--teal)}
+.kpi-mag::before{background:var(--magenta)}
+.kpi-org::before{background:var(--orange)}
+.kpi-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}
+.kpi-value{font-size:24px;font-weight:700;color:var(--text);line-height:1}
+.kpi-sub{font-size:11px;color:var(--text-hint);margin-top:4px}
+
+/* Gauge */
+.gauge-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.gauge-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+.gauge-title{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.bar-label{font-size:12px;color:var(--text);width:120px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width 0.5s}
+.bar-val{font-size:11px;font-weight:700;color:var(--text-muted);width:36px;text-align:right;flex-shrink:0}
+
+/* Budget gauge */
+.budget-gauge{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.gauge-circle{position:relative;width:120px;height:120px}
+.gauge-circle svg{width:100%;height:100%}
+.gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge-pct{font-size:22px;font-weight:700;color:var(--text)}
+.gauge-pct-label{font-size:10px;color:var(--text-muted);font-weight:600}
+
+/* Info panel */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+.info-title{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.info-row:last-child{border-bottom:none}
+.info-key{color:var(--text-muted)}
+.info-val{font-weight:600;color:var(--text);font-family:monospace}
+.status-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.status-activa{background:#e6f8f5;color:#1a7a6a}
+.status-planif{background:var(--info-bg);color:var(--blue)}
+.status-cerrada{background:var(--bg);color:var(--text-muted)}
+.status-cancelada{background:var(--danger-bg);color:var(--danger-text)}
+
+/* Empty state */
+.empty-dash{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;text-align:center;color:var(--text-muted)}
+.empty-dash .big-icon{font-size:48px;margin-bottom:1rem;opacity:0.4}
+.empty-dash h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.empty-dash p{font-size:13px;max-width:300px}
+
+@media(max-width:700px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .content{padding:1rem}
+  .gauge-row,.info-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-
 <div class="app">
 
-<!-- ── Sidebar ── -->
+<!-- ══ SIDEBAR ══ -->
 <aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="brand">AMG</div>
-    <div class="doc-title">Cierre de Campaña v3.1</div>
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <div class="brand-icon">IN</div>
+      <div>
+        <div class="brand-name">INEL</div>
+      </div>
+    </div>
+    <div class="brand-sub">AMG · Cierre de Campaña</div>
   </div>
 
-  <nav id="sideNav">
-    <!-- Built by JS -->
-  </nav>
+  <div class="sidebar-section-label">Navegación</div>
+  <div style="padding:0 0.75rem;margin-bottom:0.75rem">
+    <div class="sidebar-tab">
+      <button class="tab-btn active" id="tabFormBtn" onclick="switchView('form')">Formulario</button>
+      <button class="tab-btn" id="tabDashBtn" onclick="switchView('dash')">Dashboard</button>
+    </div>
+  </div>
+
+  <nav id="sideNav"></nav>
 
   <div class="sidebar-footer">
-    <div style="font-size:11px;color:var(--text-hint);line-height:1.5;">
-      Campos <span style="color:var(--info-text);font-weight:600;">azul</span> = llenado manual<br>
-      Campos <span style="color:var(--success-text);font-weight:600;">verde</span> = automáticos
+    <div style="font-size:10px;color:rgba(255,255,255,0.25);line-height:1.6">
+      Campos <span style="color:var(--teal);font-weight:700">verde</span> = automáticos<br>
+      Campos <span style="color:#6b9ef5;font-weight:700">azul</span> = llenado manual<br>
+      Datos guardados en Google Sheets
     </div>
   </div>
 </aside>
 
-<!-- ── Main ── -->
+<!-- ══ MAIN ══ -->
 <main class="main">
-  <div class="page-header">
-    <h1>Cierre de Campaña</h1>
-    <p>Matriz AMG — Registro de presupuesto, métricas y leads al cierre de cada producto.</p>
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Identificación</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:14%"></div></div>
+    <div class="step-counter" id="stepCounter">1 / 7</div>
   </div>
 
-  <div class="step-pills" id="stepPills"></div>
-  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:14%"></div></div>
+  <div class="content">
 
-  <div id="allPanels"></div>
+    <!-- FORM VIEW -->
+    <div class="view active" id="viewForm">
+      <div id="allPanels"></div>
+      <div class="val-summary" id="valSummary">
+        <strong>Corrige los siguientes campos antes de continuar:</strong>
+        <ul id="valList"></ul>
+      </div>
+      <div class="nav-actions">
+        <button class="btn" id="btnPrev" onclick="navigate(-1)" disabled>← Anterior</button>
+        <button class="btn btn-primary" id="btnNext" onclick="navigate(1)">Siguiente →</button>
+      </div>
+    </div>
 
-  <div class="val-summary" id="valSummary">
-    <strong>Corrige los siguientes campos antes de continuar:</strong>
-    <ul id="valList"></ul>
-  </div>
+    <!-- DASHBOARD VIEW -->
+    <div class="view" id="viewDash">
+      <div id="dashContent"></div>
+    </div>
 
-  <div class="nav-actions">
-    <button class="btn" id="btnPrev" onclick="navigate(-1)" disabled>
-      ← Anterior
-    </button>
-    <span style="font-size:11px;color:var(--text-hint)" id="stepCounter">1 / 7</span>
-    <button class="btn btn-primary" id="btnNext" onclick="navigate(1)">
-      Siguiente →
-    </button>
   </div>
 </main>
 </div>
 
 <script>
-// ── Section definitions ──
+const WEBHOOK = 'https://script.google.com/macros/s/AKfycbxiKu2P_PIVY2igK_ltJUd2ixFaP3DNKNy001mCQC8plleQrf8JoOgPIX9F_ePkdpah/exec';
+
 const SECTIONS = [
-  {
-    id: 'identificacion',
-    title: 'Identificación',
-    sub: 'Producto y responsable',
-    emoji: '🏷️',
-    color: '#7F77DD', bg: '#EEEDFE',
-    fields: [
-      { key:'cod_producto', label:'Código producto oficial', type:'text', req:true, hint:'Debe coincidir con AGC / Comercial' },
-      { key:'nombre_producto', label:'Nombre producto', type:'text', req:true, hint:'Nombre comercial del curso/programa' },
-      { key:'tipo_producto', label:'Tipo producto', type:'select', req:true, opts:['','Programa','Curso','Workshop','Diploma','Masterclass','Otro'] },
-      { key:'responsable', label:'Responsable AMG', type:'text', req:true },
-      { key:'estado', label:'Estado campaña', type:'select', req:true, opts:['','Planificación','Activa','Pausada','Finalizada','Cerrada','Cancelada'] },
-      { key:'id_campana', label:'ID campaña AMG', type:'text', auto:true, hint:'Generado: Código + Fecha corte' },
+  { id:'identificacion', title:'Identificación', sub:'Producto y responsable', emoji:'🏷️', accent:'#0857C3',
+    fields:[
+      {key:'cod_producto',   label:'Código producto oficial', type:'text',   req:true, hint:'Debe coincidir con AGC/Comercial'},
+      {key:'nombre_producto',label:'Nombre producto',         type:'text',   req:true},
+      {key:'tipo_producto',  label:'Tipo producto',           type:'select', req:true, opts:['','Programa','Curso','Workshop','Diploma','Masterclass','Otro']},
+      {key:'responsable',    label:'Responsable AMG',         type:'text',   req:true},
+      {key:'estado',         label:'Estado campaña',          type:'select', req:true, opts:['','Planificación','Activa','Pausada','Finalizada','Cerrada','Cancelada']},
+      {key:'id_campana',     label:'ID campaña AMG',          type:'text',   auto:true, hint:'Generado: Código + Fecha corte'},
     ]
   },
-  {
-    id: 'fechas',
-    title: 'Fechas y control',
-    sub: 'Periodo de pauta y corte',
-    emoji: '📅',
-    color: '#1D9E75', bg: '#E1F5EE',
-    fields: [
-      { key:'fecha_inicio', label:'Fecha inicio pauta', type:'date', req:true },
-      { key:'fecha_fin', label:'Fecha fin pauta', type:'date', req:true },
-      { key:'fecha_corte', label:'Fecha corte AMG', type:'date', req:true, hint:'Hasta cuando AMG reporta resultados' },
-      { key:'fecha_clases', label:'Fecha inicio clases', type:'date' },
-      { key:'dias_pauta', label:'Días de pauta', type:'number', auto:true, hint:'Fin − Inicio + 1' },
+  { id:'fechas', title:'Fechas y control', sub:'Periodo de pauta y corte', emoji:'📅', accent:'#49C5B1',
+    fields:[
+      {key:'fecha_inicio', label:'Fecha inicio pauta', type:'date', req:true},
+      {key:'fecha_fin',    label:'Fecha fin pauta',    type:'date', req:true},
+      {key:'fecha_corte',  label:'Fecha corte AMG',    type:'date', req:true, hint:'Hasta cuando AMG reporta resultados'},
+      {key:'fecha_clases', label:'Fecha inicio clases',type:'date'},
+      {key:'dias_pauta',   label:'Días de pauta',      type:'number', auto:true},
     ]
   },
-  {
-    id: 'presupuesto',
-    title: 'Presupuesto y pauta',
-    sub: 'Inversión por canal y costos',
-    emoji: '💰',
-    color: '#BA7517', bg: '#FAEEDA',
-    fields: [
-      { key:'moneda', label:'Moneda', type:'select', req:true, opts:['','PEN','USD'] },
-      { key:'presupuesto', label:'Presupuesto asignado', type:'number', req:true, hint:'Monto aprobado total', min:0 },
-      { key:'inv_meta', label:'Inversión Meta', type:'number', hint:'Gasto real en Meta Ads', min:0 },
-      { key:'inv_linkedin', label:'Inversión LinkedIn', type:'number', min:0 },
-      { key:'inv_google', label:'Inversión Google Ads', type:'number', min:0 },
-      { key:'costo_aisensy', label:'Costo AISENSY / mensajería', type:'number', hint:'No suma a inversión pub.', min:0 },
-      { key:'inv_pub_total', label:'Inversión pub. ejecutada', type:'number', auto:true, hint:'Meta + LinkedIn + Google Ads' },
-      { key:'gasto_total', label:'Gasto total AMG ejecutado', type:'number', auto:true, hint:'Inv. pub. + AISENSY' },
-      { key:'pct_ejecucion', label:'% ejecución presupuesto', type:'text', auto:true },
-      { key:'desviacion', label:'Desviación presupuestal', type:'number', auto:true },
+  { id:'presupuesto', title:'Presupuesto y pauta', sub:'Inversión por canal', emoji:'💰', accent:'#FF6900',
+    fields:[
+      {key:'moneda',      label:'Moneda',                    type:'select', req:true, opts:['','PEN','USD']},
+      {key:'presupuesto', label:'Presupuesto asignado',      type:'number', req:true, min:0},
+      {key:'inv_meta',    label:'Inversión Meta',            type:'number', min:0},
+      {key:'inv_linkedin',label:'Inversión LinkedIn',        type:'number', min:0},
+      {key:'inv_google',  label:'Inversión Google Ads',      type:'number', min:0},
+      {key:'costo_aisensy',label:'Costo AISENSY / mensajería',type:'number',min:0, hint:'No suma a inversión pub.'},
+      {key:'inv_pub_total',label:'Inversión pub. ejecutada', type:'number', auto:true},
+      {key:'gasto_total', label:'Gasto total AMG',           type:'number', auto:true},
+      {key:'pct_ejecucion',label:'% ejecución presupuesto',  type:'text',   auto:true},
+      {key:'desviacion',  label:'Desviación presupuestal',   type:'number', auto:true},
     ]
   },
-  {
-    id: 'metricas',
-    title: 'Métricas de pauta',
-    sub: 'Alcance, impresiones y clics',
-    emoji: '📊',
-    color: '#185FA5', bg: '#E6F1FB',
-    fields: [
-      { key:'alcance', label:'Alcance', type:'number', hint:'Personas únicas alcanzadas', min:0 },
-      { key:'impresiones', label:'Impresiones', type:'number', hint:'Total veces que se mostraron anuncios', min:0 },
-      { key:'clics', label:'Clics', type:'number', hint:'Total clics registrados por la pauta', min:0 },
+  { id:'metricas', title:'Métricas de pauta', sub:'Alcance, impresiones y clics', emoji:'📊', accent:'#0857C3',
+    fields:[
+      {key:'alcance',     label:'Alcance',     type:'number', min:0, hint:'Personas únicas alcanzadas'},
+      {key:'impresiones', label:'Impresiones', type:'number', min:0},
+      {key:'clics',       label:'Clics',       type:'number', min:0},
     ]
   },
-  {
-    id: 'leads',
-    title: 'Leads generados',
-    sub: 'Por fuente de origen',
-    emoji: '👥',
-    color: '#993556', bg: '#FBEAF0',
-    fields: [
-      { key:'leads_forms', label:'Leads Forms', type:'number', min:0 },
-      { key:'leads_wa', label:'Leads WhatsApp', type:'number', min:0 },
-      { key:'leads_li', label:'Leads LinkedIn', type:'number', min:0 },
-      { key:'leads_google', label:'Leads Google Ads', type:'number', min:0 },
-      { key:'leads_bd', label:'Leads B.D. / reactivación', type:'number', min:0 },
-      { key:'leads_eventos', label:'Leads eventos / masterclass', type:'number', min:0 },
-      { key:'leads_organicos', label:'Leads orgánicos', type:'number', min:0 },
-      { key:'leads_sinfuente', label:'Leads sin fuente identificada', type:'number', min:0 },
-      { key:'leads_pauta', label:'Leads de pauta pagada', type:'number', auto:true, hint:'Forms + WA + LI + Google Ads' },
-      { key:'leads_totales', label:'Leads totales AMG', type:'number', auto:true, hint:'Suma de todas las fuentes' },
+  { id:'leads', title:'Leads generados', sub:'Por fuente de origen', emoji:'👥', accent:'#DB0B5B',
+    fields:[
+      {key:'leads_forms',    label:'Leads Forms',              type:'number', min:0},
+      {key:'leads_wa',       label:'Leads WhatsApp',           type:'number', min:0},
+      {key:'leads_li',       label:'Leads LinkedIn',           type:'number', min:0},
+      {key:'leads_google',   label:'Leads Google Ads',         type:'number', min:0},
+      {key:'leads_bd',       label:'Leads B.D. / reactivación',type:'number', min:0},
+      {key:'leads_eventos',  label:'Leads eventos / masterclass',type:'number',min:0},
+      {key:'leads_organicos',label:'Leads orgánicos',          type:'number', min:0},
+      {key:'leads_sinfuente',label:'Leads sin fuente',         type:'number', min:0},
+      {key:'leads_pauta',    label:'Leads de pauta pagada',    type:'number', auto:true},
+      {key:'leads_totales',  label:'Leads totales AMG',        type:'number', auto:true},
     ]
   },
-  {
-    id: 'kpis',
-    title: 'KPIs automáticos',
-    sub: 'Calculados desde los datos anteriores',
-    emoji: '📈',
-    color: '#534AB7', bg: '#EEEDFE',
-    fields: [
-      { key:'cpl_pub', label:'CPL publicitario', type:'text', auto:true, hint:'Inv. pub. / Leads de pauta' },
-      { key:'costo_lead_total', label:'Costo total por lead AMG', type:'text', auto:true, hint:'Gasto total / Leads totales' },
-      { key:'ctr', label:'CTR', type:'text', auto:true, hint:'Clics / Impresiones' },
-      { key:'tasa_clic_lead', label:'Tasa clic a lead', type:'text', auto:true, hint:'Leads pauta / Clics' },
-      { key:'cpc', label:'CPC publicitario', type:'text', auto:true, hint:'Inv. pub. / Clics' },
-      { key:'cpm', label:'CPM publicitario', type:'text', auto:true, hint:'Inv. pub. / Impresiones × 1,000' },
-      { key:'inv_diaria', label:'Inversión diaria promedio', type:'text', auto:true },
-      { key:'leads_diarios', label:'Leads diarios promedio', type:'text', auto:true },
-      { key:'pct_sin_fuente', label:'% leads sin fuente', type:'text', auto:true },
+  { id:'kpis', title:'KPIs automáticos', sub:'Calculados en tiempo real', emoji:'📈', accent:'#49C5B1',
+    fields:[
+      {key:'cpl_pub',         label:'CPL publicitario',         type:'text', auto:true},
+      {key:'costo_lead_total',label:'Costo total por lead AMG', type:'text', auto:true},
+      {key:'ctr',             label:'CTR',                      type:'text', auto:true},
+      {key:'tasa_clic_lead',  label:'Tasa clic a lead',         type:'text', auto:true},
+      {key:'cpc',             label:'CPC publicitario',         type:'text', auto:true},
+      {key:'cpm',             label:'CPM publicitario',         type:'text', auto:true},
+      {key:'inv_diaria',      label:'Inversión diaria promedio',type:'text', auto:true},
+      {key:'leads_diarios',   label:'Leads diarios promedio',   type:'text', auto:true},
+      {key:'pct_sin_fuente',  label:'% leads sin fuente',       type:'text', auto:true},
     ]
   },
-  {
-    id: 'calidad',
-    title: 'Calidad y evidencia',
-    sub: 'Observaciones y links de soporte',
-    emoji: '📋',
-    color: '#5F5E5A', bg: '#F1EFE8',
-    fields: [
-      { key:'obs_amg', label:'Observaciones AMG', type:'textarea', hint:'Notas del cierre, incidencias o aclaraciones', full:true },
-      { key:'link_reporte', label:'Link reporte AMG', type:'url', hint:'URL con desglose por campaña', full:true },
-      { key:'obs_calidad', label:'Observación calidad datos', type:'textarea', full:true },
+  { id:'calidad', title:'Calidad y evidencia', sub:'Observaciones y soporte', emoji:'📋', accent:'#3D3935',
+    fields:[
+      {key:'obs_amg',    label:'Observaciones AMG',         type:'textarea', full:true},
+      {key:'link_reporte',label:'Link reporte AMG',         type:'url',      full:true},
+      {key:'obs_calidad',label:'Observación calidad datos', type:'textarea', full:true},
     ]
   }
 ];
 
 let current = 0;
+let activeView = 'form';
 const data = {};
 
-// ── Helpers ──
-const g = k => parseFloat(data[k]) || 0;
-const fmt = (n, decimals=2) => {
-  if (n === null || n === undefined || isNaN(n) || !isFinite(n)) return '—';
-  return Number(n).toLocaleString('es-PE', {minimumFractionDigits:decimals, maximumFractionDigits:decimals});
-};
-const fmtPct = n => {
-  if (!n || !isFinite(n)) return '—';
-  return (n * 100).toFixed(1) + '%';
-};
+const g  = k => parseFloat(data[k]) || 0;
+const fv = (n, d=2) => (!n && n!==0)||isNaN(n)||!isFinite(n) ? '—' : Number(n).toLocaleString('es-PE',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fp = n => (!n||!isFinite(n)) ? '—' : (n*100).toFixed(1)+'%';
 
-// ── Calculations ──
 function calcAuto() {
-  data.inv_pub_total = g('inv_meta') + g('inv_linkedin') + g('inv_google');
+  data.inv_pub_total = g('inv_meta')+g('inv_linkedin')+g('inv_google');
   data.gasto_total   = data.inv_pub_total + g('costo_aisensy');
   data.desviacion    = data.inv_pub_total - g('presupuesto');
-
-  const pct = g('presupuesto') > 0 ? data.inv_pub_total / g('presupuesto') : null;
-  data.pct_ejecucion = pct !== null ? fmtPct(pct) : '—';
-  data._pct_raw = pct; // keep raw for alerts
-
+  const pct = g('presupuesto')>0 ? data.inv_pub_total/g('presupuesto') : null;
+  data.pct_ejecucion = pct!==null ? fp(pct) : '—';
+  data._pct_raw = pct;
   const fi = data.fecha_inicio ? new Date(data.fecha_inicio) : null;
   const ff = data.fecha_fin    ? new Date(data.fecha_fin)    : null;
-  data.dias_pauta = (fi && ff && ff >= fi) ? Math.round((ff - fi) / 86400000) + 1 : '';
-
-  data.leads_pauta   = g('leads_forms') + g('leads_wa') + g('leads_li') + g('leads_google');
-  data.leads_totales = data.leads_pauta + g('leads_bd') + g('leads_eventos') + g('leads_organicos') + g('leads_sinfuente');
-
-  data.cpl_pub          = data.leads_pauta   > 0 ? fmt(data.inv_pub_total / data.leads_pauta)   : '—';
-  data.costo_lead_total = data.leads_totales > 0 ? fmt(data.gasto_total   / data.leads_totales) : '—';
-  data.ctr              = g('impresiones') > 0   ? fmtPct(g('clics') / g('impresiones'))        : '—';
-  data.tasa_clic_lead   = g('clics') > 0         ? fmtPct(data.leads_pauta / g('clics'))        : '—';
-  data.cpc              = g('clics') > 0         ? fmt(data.inv_pub_total / g('clics'))          : '—';
-  data.cpm              = g('impresiones') > 0   ? fmt(data.inv_pub_total / g('impresiones') * 1000) : '—';
-
-  const dias = parseFloat(data.dias_pauta) || 0;
-  data.inv_diaria     = dias > 0 ? fmt(data.inv_pub_total / dias)  : '—';
-  data.leads_diarios  = dias > 0 && data.leads_totales > 0 ? Number(data.leads_totales / dias).toFixed(1) : '—';
-  data.pct_sin_fuente = data.leads_totales > 0 ? fmtPct(g('leads_sinfuente') / data.leads_totales) : '—';
-
-  const cod   = (data.cod_producto  || '').trim().toUpperCase();
-  const corte = (data.fecha_corte   || '').replace(/-/g,'');
-  data.id_campana = cod && corte ? `${cod}_${corte}` : '(pendiente)';
+  data.dias_pauta = (fi&&ff&&ff>=fi) ? Math.round((ff-fi)/86400000)+1 : '';
+  data.leads_pauta   = g('leads_forms')+g('leads_wa')+g('leads_li')+g('leads_google');
+  data.leads_totales = data.leads_pauta+g('leads_bd')+g('leads_eventos')+g('leads_organicos')+g('leads_sinfuente');
+  data.cpl_pub          = data.leads_pauta>0   ? fv(data.inv_pub_total/data.leads_pauta)   : '—';
+  data.costo_lead_total = data.leads_totales>0 ? fv(data.gasto_total/data.leads_totales)   : '—';
+  data.ctr              = g('impresiones')>0   ? fp(g('clics')/g('impresiones'))            : '—';
+  data.tasa_clic_lead   = g('clics')>0         ? fp(data.leads_pauta/g('clics'))            : '—';
+  data.cpc              = g('clics')>0         ? fv(data.inv_pub_total/g('clics'))          : '—';
+  data.cpm              = g('impresiones')>0   ? fv(data.inv_pub_total/g('impresiones')*1000) : '—';
+  const dias = parseFloat(data.dias_pauta)||0;
+  data.inv_diaria    = dias>0 ? fv(data.inv_pub_total/dias) : '—';
+  data.leads_diarios = dias>0&&data.leads_totales>0 ? Number(data.leads_totales/dias).toFixed(1) : '—';
+  data.pct_sin_fuente= data.leads_totales>0 ? fp(g('leads_sinfuente')/data.leads_totales) : '—';
+  const cod   = (data.cod_producto||'').trim().toUpperCase();
+  const corte = (data.fecha_corte||'').replace(/-/g,'');
+  data.id_campana = cod&&corte ? `${cod}_${corte}` : '(pendiente)';
 }
 
-// ── Build DOM ──
+/* ── View switcher ── */
+function switchView(v) {
+  activeView = v;
+  document.getElementById('viewForm').classList.toggle('active', v==='form');
+  document.getElementById('viewDash').classList.toggle('active', v==='dash');
+  document.getElementById('tabFormBtn').classList.toggle('active', v==='form');
+  document.getElementById('tabDashBtn').classList.toggle('active', v==='dash');
+  document.getElementById('topbarTitle').textContent = v==='form' ? SECTIONS[current].title : 'Dashboard de campaña';
+  document.getElementById('progressFill').style.width = v==='dash' ? '100%' : `${Math.round((current+1)/SECTIONS.length*100)}%`;
+  document.getElementById('stepCounter').textContent  = v==='dash' ? 'Vista resumen' : `${current+1} / ${SECTIONS.length}`;
+  if (v==='dash') renderDash();
+}
+
+/* ── Dashboard renderer ── */
+function renderDash() {
+  calcAuto();
+  const el = document.getElementById('dashContent');
+  const mon = data.moneda || '';
+  const hasData = !!(data.nombre_producto || data.cod_producto);
+
+  if (!hasData) {
+    el.innerHTML = `<div class="empty-dash"><div class="big-icon">📋</div><h3>Sin datos todavía</h3><p>Completa al menos la sección de identificación en el formulario para ver el dashboard.</p><button class="btn btn-primary" style="margin-top:1rem" onclick="switchView('form')">Ir al formulario</button></div>`;
+    return;
+  }
+
+  const pctRaw = data._pct_raw || 0;
+  const pctDeg = Math.min(pctRaw * 100, 130);
+  const r = 44, cx = 60, cy = 60;
+  const circ = 2 * Math.PI * r;
+  const dash  = Math.min(pctRaw, 1) * circ * 0.75;
+  const gaugeFill = pctRaw > 1.1 ? '#DB0B5B' : pctRaw >= 0.8 ? '#49C5B1' : '#FF6900';
+
+  const leadSources = [
+    {label:'Forms',         val: g('leads_forms'),    color:'#0857C3'},
+    {label:'WhatsApp',      val: g('leads_wa'),       color:'#49C5B1'},
+    {label:'LinkedIn',      val: g('leads_li'),       color:'#DB0B5B'},
+    {label:'Google Ads',    val: g('leads_google'),   color:'#FF6900'},
+    {label:'B.D./Reactiv.', val: g('leads_bd'),       color:'#D0DF00'},
+    {label:'Eventos',       val: g('leads_eventos'),  color:'#7a7672'},
+    {label:'Orgánicos',     val: g('leads_organicos'),color:'#3D3935'},
+    {label:'Sin fuente',    val: g('leads_sinfuente'),color:'#E0DBE3'},
+  ].filter(s => s.val > 0);
+  const maxLead = Math.max(...leadSources.map(s=>s.val), 1);
+
+  const invSources = [
+    {label:'Meta',       val: g('inv_meta'),     color:'#0857C3'},
+    {label:'LinkedIn',   val: g('inv_linkedin'), color:'#DB0B5B'},
+    {label:'Google Ads', val: g('inv_google'),   color:'#FF6900'},
+    {label:'AISENSY',    val: g('costo_aisensy'),color:'#49C5B1'},
+  ].filter(s => s.val > 0);
+  const maxInv = Math.max(...invSources.map(s=>s.val), 1);
+
+  const statusClass = {
+    'Activa':'activa','Planificación':'planif','Cerrada':'cerrada',
+    'Cancelada':'cancelada','Finalizada':'cerrada','Pausada':'planif'
+  }[data.estado] || 'cerrada';
+
+  el.innerHTML = `
+  <div class="dash-header">
+    <h2>${data.nombre_producto || '—'}</h2>
+    <p>${data.cod_producto||'—'} · ${data.tipo_producto||'—'} · Responsable: ${data.responsable||'—'}</p>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card kpi-blue">
+      <div class="kpi-label">Inversión pub. ejecutada</div>
+      <div class="kpi-value">${fv(data.inv_pub_total)}</div>
+      <div class="kpi-sub">${mon}</div>
+    </div>
+    <div class="kpi-card kpi-teal">
+      <div class="kpi-label">Leads totales AMG</div>
+      <div class="kpi-value">${data.leads_totales||'—'}</div>
+      <div class="kpi-sub">${data.leads_diarios!=='—'?data.leads_diarios+' leads/día':''}</div>
+    </div>
+    <div class="kpi-card kpi-mag">
+      <div class="kpi-label">CPL publicitario</div>
+      <div class="kpi-value">${data.cpl_pub||'—'}</div>
+      <div class="kpi-sub">${mon}</div>
+    </div>
+    <div class="kpi-card kpi-org">
+      <div class="kpi-label">CTR</div>
+      <div class="kpi-value">${data.ctr||'—'}</div>
+      <div class="kpi-sub">Clics / impresiones</div>
+    </div>
+    <div class="kpi-card kpi-blue">
+      <div class="kpi-label">Días de pauta</div>
+      <div class="kpi-value">${data.dias_pauta||'—'}</div>
+      <div class="kpi-sub">${data.fecha_inicio||''} → ${data.fecha_fin||''}</div>
+    </div>
+    <div class="kpi-card kpi-teal">
+      <div class="kpi-label">Costo/lead AMG</div>
+      <div class="kpi-value">${data.costo_lead_total||'—'}</div>
+      <div class="kpi-sub">${mon}</div>
+    </div>
+  </div>
+
+  <div class="gauge-row">
+    <div class="gauge-card">
+      <div class="gauge-title">Ejecución de presupuesto</div>
+      <div class="budget-gauge">
+        <div class="gauge-circle">
+          <svg viewBox="0 0 120 120">
+            <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--bg)" stroke-width="10" stroke-dasharray="${circ*0.75} ${circ}" stroke-dashoffset="${circ*0.125}" stroke-linecap="round" transform="rotate(135 ${cx} ${cy})"/>
+            <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${gaugeFill}" stroke-width="10" stroke-dasharray="${dash} ${circ}" stroke-dashoffset="${circ*0.125}" stroke-linecap="round" transform="rotate(135 ${cx} ${cy})" style="transition:stroke-dasharray 0.5s"/>
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-pct">${data.pct_ejecucion||'—'}</div>
+            <div class="gauge-pct-label">ejecutado</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);text-align:center">
+          <div><strong style="color:var(--text)">${fv(data.inv_pub_total)} ${mon}</strong> ejecutado</div>
+          <div>de <strong style="color:var(--text)">${fv(g('presupuesto'))} ${mon}</strong> asignado</div>
+          ${data.desviacion!==undefined?`<div style="color:${data.desviacion>0?'var(--danger-text)':'var(--success-text)'}">Desviación: ${fv(data.desviacion)} ${mon}</div>`:''}
+        </div>
+      </div>
+    </div>
+
+    <div class="gauge-card">
+      <div class="gauge-title">Leads por fuente</div>
+      ${leadSources.length ? leadSources.map(s=>`
+        <div class="bar-row">
+          <div class="bar-label" title="${s.label}">${s.label}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${Math.round(s.val/maxLead*100)}%;background:${s.color}"></div></div>
+          <div class="bar-val">${s.val}</div>
+        </div>`).join('') : '<div style="font-size:12px;color:var(--text-hint);padding:1rem 0">Sin leads registrados aún</div>'}
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-title">Inversión por canal</div>
+      ${invSources.length ? invSources.map(s=>`
+        <div class="bar-row">
+          <div class="bar-label">${s.label}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${Math.round(s.val/maxInv*100)}%;background:${s.color}"></div></div>
+          <div class="bar-val">${fv(s.val,0)}</div>
+        </div>`).join('') : '<div style="font-size:12px;color:var(--text-hint);padding:1rem 0">Sin inversión registrada</div>'}
+    </div>
+
+    <div class="info-card">
+      <div class="info-title">Resumen del cierre</div>
+      <div class="info-row"><span class="info-key">Estado</span><span><span class="status-pill status-${statusClass}">${data.estado||'—'}</span></span></div>
+      <div class="info-row"><span class="info-key">ID campaña</span><span class="info-val" style="font-size:11px">${data.id_campana||'—'}</span></div>
+      <div class="info-row"><span class="info-key">Impresiones</span><span class="info-val">${data.impresiones?Number(data.impresiones).toLocaleString('es-PE'):'—'}</span></div>
+      <div class="info-row"><span class="info-key">Clics</span><span class="info-val">${data.clics?Number(data.clics).toLocaleString('es-PE'):'—'}</span></div>
+      <div class="info-row"><span class="info-key">CPC pub.</span><span class="info-val">${data.cpc||'—'} ${mon}</span></div>
+      <div class="info-row"><span class="info-key">CPM pub.</span><span class="info-val">${data.cpm||'—'} ${mon}</span></div>
+      <div class="info-row"><span class="info-key">Tasa clic→lead</span><span class="info-val">${data.tasa_clic_lead||'—'}</span></div>
+      <div class="info-row"><span class="info-key">% sin fuente</span><span class="info-val">${data.pct_sin_fuente||'—'}</span></div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="submitToSheets()">Guardar en Google Sheets</button>
+    <button class="btn" onclick="switchView('form')">← Volver al formulario</button>
+  </div>
+  <div id="submitStatusDash" style="margin-top:0.75rem"></div>
+  `;
+}
+
+/* ── Build form DOM ── */
 function buildUI() {
   const nav    = document.getElementById('sideNav');
-  const pills  = document.getElementById('stepPills');
   const panels = document.getElementById('allPanels');
 
   SECTIONS.forEach((sec, i) => {
-    // Sidebar nav item
     const navEl = document.createElement('div');
-    navEl.className = 'nav-item' + (i === 0 ? ' active' : '');
-    navEl.id = 'nav_' + i;
+    navEl.className = 'nav-item' + (i===0?' active':'');
+    navEl.id = 'nav_'+i;
     navEl.onclick = () => goTo(i);
-    navEl.innerHTML = `
-      <div class="nav-icon" style="background:${sec.bg}">
-        <span style="font-size:14px">${sec.emoji}</span>
-      </div>
-      <div>
-        <div class="nav-label">${sec.title}</div>
-        <div class="nav-sub">${sec.sub}</div>
-      </div>
-      <div class="nav-check" id="navCheck_${i}">
-        <svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg>
-      </div>`;
+    navEl.innerHTML = `<div class="nav-dot">${sec.emoji}</div><div><div class="nav-label">${sec.title}</div></div><div class="nav-check" id="navCheck_${i}"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></div>`;
     nav.appendChild(navEl);
 
-    // Step pill
-    const pill = document.createElement('button');
-    pill.className = 'step-pill' + (i === 0 ? ' active' : '');
-    pill.id = 'pill_' + i;
-    pill.textContent = sec.title;
-    pill.onclick = () => goTo(i);
-    pills.appendChild(pill);
-
-    // Panel
     const panel = document.createElement('div');
-    panel.className = 'section-panel' + (i === 0 ? ' active' : '');
-    panel.id = 'panel_' + i;
+    panel.className = 'section-panel' + (i===0?' active':'');
+    panel.id = 'panel_'+i;
+    panel.style.display = i===0 ? 'block' : 'none';
 
-    let fieldsHtml = `<div class="field-grid">`;
+    let fieldsHtml = '<div class="field-grid">';
     sec.fields.forEach(f => {
       const extra = f.full ? ' full' : '';
-      const badges = `${f.auto ? '<span class="badge badge-auto">auto</span>' : '<span class="badge badge-manual">manual</span>'}${f.req ? ' <span class="badge badge-req">obligatorio</span>' : ''}`;
+      const badges = `${f.auto?'<span class="badge badge-auto">auto</span>':'<span class="badge badge-manual">manual</span>'}${f.req?' <span class="badge badge-req">obligatorio</span>':''}`;
       let inp = '';
-      if (f.type === 'select') {
-        inp = `<select id="f_${f.key}" ${f.auto?'disabled':''} onchange="setVal('${f.key}',this.value)">${f.opts.map(o=>`<option value="${o}">${o}</option>`).join('')}</select>`;
-      } else if (f.type === 'textarea') {
+      if (f.type==='select') {
+        inp = `<select id="f_${f.key}" ${f.auto?'disabled':''} onchange="setVal('${f.key}',this.value)">${(f.opts||[]).map(o=>`<option value="${o}">${o}</option>`).join('')}</select>`;
+      } else if (f.type==='textarea') {
         inp = `<textarea id="f_${f.key}" placeholder="${f.hint||''}" oninput="setVal('${f.key}',this.value)"></textarea>`;
       } else {
         inp = `<input type="${f.type}" id="f_${f.key}" ${f.auto?'readonly':''} placeholder="${f.hint||''}" ${f.min!==undefined?'min="'+f.min+'"':''} oninput="setVal('${f.key}',this.value)">`;
       }
-      fieldsHtml += `
-        <div class="field-group${extra}">
-          <div class="field-label">${f.label} ${badges}</div>
-          ${inp}
-          ${f.hint&&!f.auto ? `<div class="field-hint">${f.hint}</div>` : ''}
-          <div class="field-error" id="err_${f.key}">Este campo es obligatorio.</div>
-        </div>`;
+      fieldsHtml += `<div class="field-group${extra}"><div class="field-label">${f.label} ${badges}</div>${inp}${f.hint&&!f.auto?`<div class="field-hint">${f.hint}</div>`:''}<div class="field-error" id="err_${f.key}">Este campo es obligatorio.</div></div>`;
     });
-    fieldsHtml += `</div>`;
+    fieldsHtml += '</div>';
 
-    // Extra: alerts section for presupuesto
     let extras = '';
-    if (sec.id === 'presupuesto') {
-      extras = `<hr class="divider"><div id="budgetAlerts"></div>`;
-    }
-    // Extra: KPI cards for kpis section
-    if (sec.id === 'kpis') {
-      extras = `<hr class="divider"><div class="kpi-grid" id="kpiCards"></div><div id="leadAlerts" style="margin-top:0.75rem"></div>`;
-    }
-    // Extra: summary + export for calidad section
-    if (sec.id === 'calidad') {
-      extras = `
-        <hr class="divider">
-        <div style="margin-bottom:0.75rem">
-          <div class="field-label" style="margin-bottom:6px">ID campaña AMG generado</div>
-          <div class="id-badge" id="idBadge">—</div>
-        </div>
-        <hr class="divider">
-        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:0.75rem">Resumen de cierre</div>
-        <table class="summary-table" id="summaryTable"></table>
-        <hr class="divider">
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-success" onclick="copyJSON()">Copiar JSON</button>
-          <button class="btn" onclick="printPage()">Imprimir / Exportar PDF</button>
-        </div>
-        <div class="export-box" id="exportBox"></div>`;
-    }
+    if (sec.id==='presupuesto') extras = `<div id="budgetAlerts"></div>`;
+    if (sec.id==='kpis') extras = `<hr class="divider"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px" id="kpiCards"></div><div id="leadAlerts" style="margin-top:0.75rem"></div>`;
+    if (sec.id==='calidad') extras = `
+      <hr class="divider">
+      <div style="margin-bottom:0.75rem"><div class="field-label" style="margin-bottom:6px">ID campaña AMG</div><div class="id-badge" id="idBadge">—</div></div>
+      <hr class="divider">
+      <div id="submitStatus" style="margin-bottom:0.75rem"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="btnSubmit" class="btn btn-primary" onclick="submitToSheets()">Guardar en Google Sheets</button>
+        <button class="btn" onclick="copyJSON()">Copiar JSON</button>
+        <button class="btn" onclick="switchView('dash')">Ver Dashboard →</button>
+        <button class="btn" onclick="printPage()">Imprimir / PDF</button>
+      </div>
+      <div class="export-box" id="exportBox"></div>`;
 
     panel.innerHTML = `
       <div class="section-card">
         <div class="section-card-header">
-          <div class="section-card-icon" style="background:${sec.bg}">
-            <span style="font-size:20px">${sec.emoji}</span>
-          </div>
-          <div>
-            <div class="section-card-title" style="color:${sec.color}">${sec.title}</div>
-            <div class="section-card-sub">${sec.sub}</div>
-          </div>
+          <div class="section-card-accent" style="background:${sec.accent}"></div>
+          <div><div class="section-card-title">${sec.emoji} ${sec.title}</div><div class="section-card-sub">${sec.sub}</div></div>
         </div>
         <div class="section-card-body">
-          ${fieldsHtml}
-          ${extras}
+          <div class="draft-banner" id="draftBanner_${i}">📋 <span>Borrador restaurado automáticamente.</span> <button onclick="clearDraft()" style="margin-left:auto;font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--blue);background:transparent;color:var(--blue);cursor:pointer">Descartar</button></div>
+          ${fieldsHtml}${extras}
         </div>
       </div>`;
     panels.appendChild(panel);
   });
 }
 
-// ── Set value ──
 function setVal(key, val) {
   data[key] = val;
   calcAuto();
   refreshAuto();
   refreshAlerts();
-  clearError(key);
+  clearErr(key);
+  saveDraft();
 }
 
-// ── Refresh auto fields ──
 function refreshAuto() {
-  SECTIONS.forEach(sec => {
-    sec.fields.filter(f => f.auto).forEach(f => {
-      const el = document.getElementById('f_' + f.key);
-      if (!el) return;
-      const v = data[f.key];
-      el.value = (v !== undefined && v !== null && v !== '') ? v : '';
-    });
-  });
+  SECTIONS.forEach(sec => sec.fields.filter(f=>f.auto).forEach(f => {
+    const el = document.getElementById('f_'+f.key);
+    if (el && data[f.key]!==undefined) el.value = data[f.key];
+  }));
   const idBadge = document.getElementById('idBadge');
-  if (idBadge) idBadge.textContent = data.id_campana || '—';
-  refreshKPICards();
-  refreshSummary();
+  if (idBadge) idBadge.textContent = data.id_campana||'—';
+  const kc = document.getElementById('kpiCards');
+  if (kc) {
+    const mon = data.moneda||'';
+    kc.innerHTML = [
+      ['CPL pub.',data.cpl_pub,mon],['Costo/lead AMG',data.costo_lead_total,mon],
+      ['CTR',data.ctr],['Tasa clic→lead',data.tasa_clic_lead],
+      ['CPC pub.',data.cpc,mon],['CPM pub.',data.cpm,mon],
+      ['Inv. diaria',data.inv_diaria,mon],['Leads diarios',data.leads_diarios],
+      ['% sin fuente',data.pct_sin_fuente],
+    ].map(([l,v,s])=>`<div style="background:var(--bg);border-radius:var(--radius);padding:10px 12px;border:1px solid var(--border)"><div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">${l}</div><div style="font-size:18px;font-weight:700;color:var(--text)">${v||'—'}</div>${s?`<div style="font-size:10px;color:var(--text-hint)">${s}</div>`:''}</div>`).join('');
+  }
 }
 
-// ── KPI cards ──
-function refreshKPICards() {
-  const el = document.getElementById('kpiCards');
-  if (!el) return;
-  const mon = data.moneda || '';
-  const cards = [
-    { label: 'CPL publicitario',      value: data.cpl_pub,          sub: mon },
-    { label: 'Costo/lead AMG',        value: data.costo_lead_total,  sub: mon },
-    { label: 'CTR',                   value: data.ctr },
-    { label: 'Tasa clic → lead',      value: data.tasa_clic_lead },
-    { label: 'CPC publicitario',      value: data.cpc,              sub: mon },
-    { label: 'CPM publicitario',      value: data.cpm,              sub: mon },
-    { label: 'Inv. diaria prom.',     value: data.inv_diaria,       sub: mon },
-    { label: 'Leads diarios prom.',   value: data.leads_diarios },
-    { label: '% sin fuente',          value: data.pct_sin_fuente },
-  ];
-  el.innerHTML = cards.map(c => `
-    <div class="kpi-card">
-      <div class="kpi-card-label">${c.label}</div>
-      <div class="kpi-card-value">${c.value || '—'}</div>
-      ${c.sub ? `<div class="kpi-card-sub">${c.sub}</div>` : ''}
-    </div>`).join('');
-}
-
-// ── Alerts ──
 function refreshAlerts() {
-  // Budget alerts
   const ba = document.getElementById('budgetAlerts');
   if (ba) {
     let html = '';
     const pct = data._pct_raw;
-    if (pct !== null && pct !== undefined && g('presupuesto') > 0) {
-      if (pct > 1.10) {
-        html = `<div class="alert alert-danger"><span class="alert-icon">⚠️</span><div class="alert-body"><strong>Sobreejecutado:</strong> La inversión pub. supera el presupuesto en ${fmtPct(pct-1)} (${fmt(Math.abs(data.desviacion))} ${data.moneda||''}). Verificar aprobación.</div></div>`;
-      } else if (pct > 1.0) {
-        html = `<div class="alert alert-warn"><span class="alert-icon">⚠️</span><div class="alert-body"><strong>Leve sobreejección:</strong> Inversión pub. supera presupuesto en ${fmtPct(pct-1)}. Dentro de tolerancia si fue autorizado.</div></div>`;
-      } else if (pct < 0.80 && g('inv_pub_total') > 0) {
-        html = `<div class="alert alert-warn"><span class="alert-icon">💡</span><div class="alert-body"><strong>Subejecución:</strong> Solo se ejecutó el ${fmtPct(pct)} del presupuesto. Documenta la razón en Observaciones.</div></div>`;
-      } else if (pct >= 0.80 && pct <= 1.0) {
-        html = `<div class="alert alert-success"><span class="alert-icon">✅</span><div class="alert-body"><strong>Ejecución dentro de rango:</strong> ${fmtPct(pct)} del presupuesto ejecutado.</div></div>`;
-      }
+    if (pct!==null && pct!==undefined && g('presupuesto')>0) {
+      if (pct>1.10) html = `<div class="alert alert-danger"><span class="alert-icon">⚠️</span><div class="alert-body"><strong>Sobreejecutado ${fp(pct)}:</strong> Supera presupuesto en ${fv(Math.abs(data.desviacion))} ${data.moneda||''}. Verificar aprobación.</div></div>`;
+      else if (pct>1.0) html = `<div class="alert alert-warn"><span class="alert-icon">⚠️</span><div class="alert-body"><strong>Leve sobreejección:</strong> Inversión supera presupuesto en ${fp(pct-1)}. Documentar si fue autorizado.</div></div>`;
+      else if (pct<0.80&&g('inv_pub_total')>0) html = `<div class="alert alert-warn"><span class="alert-icon">💡</span><div class="alert-body"><strong>Subejecución (${fp(pct)}):</strong> Solo se ejecutó el ${fp(pct)} del presupuesto. Documenta la razón en Observaciones.</div></div>`;
+      else if (pct>=0.80&&pct<=1.0) html = `<div class="alert alert-success"><span class="alert-icon">✅</span><div class="alert-body"><strong>Ejecución en rango (${fp(pct)}):</strong> Dentro del presupuesto asignado.</div></div>`;
     }
     ba.innerHTML = html;
   }
-
-  // Lead source alerts
   const la = document.getElementById('leadAlerts');
   if (la) {
     let html = '';
-    if (data.leads_totales > 0) {
-      const pct_sf = g('leads_sinfuente') / data.leads_totales;
-      if (pct_sf > 0.30) {
-        html = `<div class="alert alert-warn"><span class="alert-icon">⚠️</span><div class="alert-body"><strong>Alta proporción sin fuente (${fmtPct(pct_sf)}):</strong> Más del 30% de leads no tienen fuente identificada. Revisar tracking antes de cerrar.</div></div>`;
-      }
-      if (data.leads_pauta === 0 && g('inv_pub_total') > 0) {
-        html += `<div class="alert alert-danger"><span class="alert-icon">🚨</span><div class="alert-body"><strong>Sin leads de pauta:</strong> Hay inversión publicitaria registrada pero 0 leads de pauta. Verificar atribución.</div></div>`;
-      }
+    if (data.leads_totales>0) {
+      const pct_sf = g('leads_sinfuente')/data.leads_totales;
+      if (pct_sf>0.30) html += `<div class="alert alert-warn"><span class="alert-icon">⚠️</span><div class="alert-body"><strong>Alta proporción sin fuente (${fp(pct_sf)}):</strong> Revisar tracking antes de cerrar.</div></div>`;
+      if (data.leads_pauta===0&&g('inv_pub_total')>0) html += `<div class="alert alert-danger"><span class="alert-icon">🚨</span><div class="alert-body"><strong>Sin leads de pauta:</strong> Hay inversión registrada pero 0 leads de pauta. Verificar atribución.</div></div>`;
     }
     la.innerHTML = html;
   }
 }
 
-// ── Summary table ──
-function refreshSummary() {
-  const el = document.getElementById('summaryTable');
-  if (!el) return;
-  const mon = data.moneda || '';
-  const rows = [
-    ['ID campaña AMG', data.id_campana || '—'],
-    ['Producto', data.nombre_producto || '—'],
-    ['Tipo', data.tipo_producto || '—'],
-    ['Responsable AMG', data.responsable || '—'],
-    ['Estado', data.estado || '—'],
-    ['Período de pauta', data.fecha_inicio && data.fecha_fin ? `${data.fecha_inicio} → ${data.fecha_fin}` : '—'],
-    ['Días de pauta', data.dias_pauta || '—'],
-    ['Presupuesto asignado', data.presupuesto ? `${fmt(data.presupuesto)} ${mon}` : '—'],
-    ['Inversión pub. ejecutada', `${fmt(data.inv_pub_total)} ${mon}`],
-    ['Gasto total AMG', `${fmt(data.gasto_total)} ${mon}`],
-    ['% ejecución', data.pct_ejecucion || '—'],
-    ['Desviación presupuestal', data.desviacion !== undefined ? `${fmt(data.desviacion)} ${mon}` : '—'],
-    ['Impresiones', data.impresiones ? Number(data.impresiones).toLocaleString('es-PE') : '—'],
-    ['Clics', data.clics ? Number(data.clics).toLocaleString('es-PE') : '—'],
-    ['Leads totales AMG', data.leads_totales > 0 ? data.leads_totales : '—'],
-    ['Leads de pauta pagada', data.leads_pauta > 0 ? data.leads_pauta : '—'],
-    ['CPL publicitario', data.cpl_pub || '—'],
-    ['Costo total por lead AMG', data.costo_lead_total || '—'],
-    ['CTR', data.ctr || '—'],
-    ['CPC publicitario', data.cpc || '—'],
-    ['CPM publicitario', data.cpm || '—'],
-  ];
-  el.innerHTML = `<thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody>` +
-    rows.map(([l,v]) => `<tr><td>${l}</td><td class="mono">${v}</td></tr>`).join('') +
-    `</tbody>`;
-}
-
-// ── Validation ──
 function validateSection(idx) {
   const sec = SECTIONS[idx];
   const errors = [];
   sec.fields.forEach(f => {
-    if (!f.req || f.auto) return;
-    const el = document.getElementById('f_' + f.key);
-    const val = (data[f.key] || '').toString().trim();
-    if (!val) {
-      errors.push({ key: f.key, label: f.label });
-      el && el.classList.add('invalid');
-    }
+    if (!f.req||f.auto) return;
+    const val = (data[f.key]||'').toString().trim();
+    if (!val) { errors.push({key:f.key,label:f.label}); document.getElementById('f_'+f.key)?.classList.add('invalid'); }
   });
-  // Date logic
-  if (sec.id === 'fechas') {
-    if (data.fecha_inicio && data.fecha_fin && data.fecha_fin < data.fecha_inicio) {
-      errors.push({ key:'fecha_fin', label:'Fecha fin pauta debe ser posterior a inicio' });
-      const el = document.getElementById('f_fecha_fin');
-      el && el.classList.add('invalid');
-    }
+  if (sec.id==='fechas' && data.fecha_inicio && data.fecha_fin && data.fecha_fin<data.fecha_inicio) {
+    errors.push({key:'fecha_fin',label:'Fecha fin debe ser posterior a inicio'});
+    document.getElementById('f_fecha_fin')?.classList.add('invalid');
   }
-  const valSum = document.getElementById('valSummary');
-  const valList = document.getElementById('valList');
-  if (errors.length) {
-    valList.innerHTML = errors.map(e => `<li>${e.label}</li>`).join('');
-    valSum.style.display = 'block';
-    return false;
-  }
-  valSum.style.display = 'none';
-  return true;
+  const vs = document.getElementById('valSummary');
+  const vl = document.getElementById('valList');
+  if (errors.length) { vl.innerHTML=errors.map(e=>`<li>${e.label}</li>`).join(''); vs.style.display='block'; return false; }
+  vs.style.display='none'; return true;
 }
 
-function clearError(key) {
-  const el = document.getElementById('f_' + key);
-  if (el) el.classList.remove('invalid');
-}
+function clearErr(key) { document.getElementById('f_'+key)?.classList.remove('invalid'); }
 
-// ── Navigation ──
 function navigate(dir) {
-  if (dir === 1 && !validateSection(current)) return;
-  const next = current + dir;
-  if (next < 0 || next >= SECTIONS.length) return;
+  if (dir===1 && !validateSection(current)) return;
+  const next = current+dir;
+  if (next<0||next>=SECTIONS.length) return;
   markDone(current);
   goTo(next);
 }
 
 function goTo(idx) {
-  document.getElementById('panel_' + current).classList.remove('active');
-  document.getElementById('nav_'   + current).classList.remove('active');
-  document.getElementById('pill_'  + current).classList.remove('active');
-  current = idx;
-  document.getElementById('panel_' + current).classList.add('active');
-  document.getElementById('nav_'   + current).classList.add('active');
-  document.getElementById('pill_'  + current).classList.add('active');
-  document.getElementById('stepCounter').textContent = `${current + 1} / ${SECTIONS.length}`;
-  document.getElementById('progressFill').style.width = `${Math.round((current + 1) / SECTIONS.length * 100)}%`;
-  document.getElementById('btnPrev').disabled = current === 0;
-  const isLast = current === SECTIONS.length - 1;
-  document.getElementById('btnNext').textContent = isLast ? 'Finalizar ✓' : 'Siguiente →';
-  document.getElementById('btnNext').className = isLast ? 'btn btn-success' : 'btn btn-primary';
-  document.getElementById('valSummary').style.display = 'none';
-  calcAuto();
-  refreshAuto();
-  refreshAlerts();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('panel_'+current).style.display='none';
+  document.getElementById('nav_'+current).classList.remove('active');
+  current=idx;
+  document.getElementById('panel_'+current).style.display='block';
+  document.getElementById('nav_'+current).classList.add('active');
+  document.getElementById('topbarTitle').textContent=SECTIONS[current].title;
+  document.getElementById('stepCounter').textContent=`${current+1} / ${SECTIONS.length}`;
+  document.getElementById('progressFill').style.width=`${Math.round((current+1)/SECTIONS.length*100)}%`;
+  document.getElementById('btnPrev').disabled=current===0;
+  const isLast=current===SECTIONS.length-1;
+  document.getElementById('btnNext').textContent=isLast?'Finalizar ✓':'Siguiente →';
+  document.getElementById('btnNext').className=isLast?'btn btn-teal':'btn btn-primary';
+  document.getElementById('valSummary').style.display='none';
+  calcAuto(); refreshAuto(); refreshAlerts();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function markDone(idx) {
-  document.getElementById('nav_' + idx).classList.add('done');
-  document.getElementById('navCheck_' + idx).style.opacity = '1';
-  document.getElementById('pill_' + idx).classList.add('done');
-  document.getElementById('pill_' + idx).classList.remove('active');
+  document.getElementById('nav_'+idx).classList.add('done');
+  document.getElementById('navCheck_'+idx).style.opacity='1';
 }
 
-// ── Webhook ──
-const WEBHOOK = 'https://script.google.com/macros/s/AKfycbxiKu2P_PIVY2igK_ltJUd2ixFaP3DNKNy001mCQC8plleQrf8JoOgPIX9F_ePkdpah/exec';
-
+/* ── Sheets submit ── */
 function buildPayload() {
   calcAuto();
-  const payload = {};
-  SECTIONS.forEach(sec => sec.fields.forEach(f => { payload[f.key] = data[f.key] || ''; }));
-  return payload;
+  const p={};
+  SECTIONS.forEach(sec=>sec.fields.forEach(f=>{p[f.key]=data[f.key]||'';}));
+  return p;
 }
 
 async function submitToSheets() {
-  const btn = document.getElementById('btnSubmit');
-  const statusEl = document.getElementById('submitStatus');
-  btn.disabled = true;
-  btn.textContent = 'Guardando...';
-  statusEl.innerHTML = '';
+  const statusIds = ['submitStatus','submitStatusDash'];
+  const btnEl = document.getElementById('btnSubmit');
+  if (btnEl) { btnEl.disabled=true; btnEl.textContent='Guardando...'; }
 
   const payload = buildPayload();
-
-  // Guardar en localStorage como respaldo
-  const draft = JSON.parse(localStorage.getItem('amg_drafts') || '[]');
-  draft.push({ ...payload, _saved: new Date().toISOString() });
+  const draft = JSON.parse(localStorage.getItem('amg_drafts')||'[]');
+  draft.push({...payload, _saved:new Date().toISOString()});
   localStorage.setItem('amg_drafts', JSON.stringify(draft));
 
+  const successHtml = `<div class="alert alert-success"><span class="alert-icon">✅</span><div class="alert-body"><strong>Guardado en Google Sheets.</strong> El cierre fue registrado correctamente.</div></div>`;
+  const warnHtml    = `<div class="alert alert-warn"><span class="alert-icon">⚠️</span><div class="alert-body"><strong>Sin conexión.</strong> Datos guardados localmente. Se reintentará al guardar de nuevo.</div></div>`;
+
   try {
-    const res = await fetch(WEBHOOK, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    statusEl.innerHTML = `<div class="alert alert-success"><span class="alert-icon">✅</span><div class="alert-body"><strong>Guardado en Google Sheets.</strong> El cierre fue registrado correctamente. También quedó una copia local de respaldo.</div></div>`;
-    btn.textContent = '✓ Guardado';
-    btn.className = 'btn btn-success';
-    // Limpiar borrador activo
+    await fetch(WEBHOOK, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    statusIds.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=successHtml;});
+    if (btnEl) { btnEl.textContent='✓ Guardado'; btnEl.className='btn btn-teal'; }
     localStorage.removeItem('amg_draft_active');
-  } catch (err) {
-    statusEl.innerHTML = `<div class="alert alert-warn"><span class="alert-icon">⚠️</span><div class="alert-body"><strong>Sin conexión.</strong> Los datos se guardaron localmente. Se enviarán a Sheets cuando haya conexión.</div></div>`;
-    btn.textContent = 'Reintentar';
-    btn.disabled = false;
+  } catch(err) {
+    statusIds.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=warnHtml;});
+    if (btnEl) { btnEl.textContent='Reintentar'; btnEl.disabled=false; }
   }
 }
 
-// ── localStorage draft autosave ──
+/* ── localStorage draft ── */
 function saveDraft() {
-  const payload = buildPayload();
-  localStorage.setItem('amg_draft_active', JSON.stringify(payload));
+  localStorage.setItem('amg_draft_active', JSON.stringify(buildPayload()));
 }
 
 function loadDraft() {
@@ -877,78 +768,35 @@ function loadDraft() {
     if (!saved) return;
     const parsed = JSON.parse(saved);
     Object.assign(data, parsed);
-    // Restaurar campos en el DOM
-    SECTIONS.forEach(sec => sec.fields.forEach(f => {
-      const el = document.getElementById('f_' + f.key);
-      if (!el || f.auto) return;
-      el.value = data[f.key] || '';
+    SECTIONS.forEach(sec=>sec.fields.forEach(f=>{
+      if (f.auto) return;
+      const el=document.getElementById('f_'+f.key);
+      if (el) el.value=data[f.key]||'';
     }));
-    calcAuto();
-    refreshAuto();
-    refreshAlerts();
-    // Mostrar aviso
-    const banner = document.getElementById('draftBanner');
-    if (banner) banner.style.display = 'flex';
-  } catch(e) {}
+    calcAuto(); refreshAuto(); refreshAlerts();
+    document.getElementById('draftBanner_0').style.display='flex';
+  } catch(e){}
 }
 
 function clearDraft() {
   localStorage.removeItem('amg_draft_active');
-  const banner = document.getElementById('draftBanner');
-  if (banner) banner.style.display = 'none';
+  SECTIONS.forEach((_,i)=>{const b=document.getElementById('draftBanner_'+i);if(b)b.style.display='none';});
 }
 
-// ── Export ──
 function copyJSON() {
-  const payload = buildPayload();
-  const txt = JSON.stringify(payload, null, 2);
+  const txt = JSON.stringify(buildPayload(), null, 2);
   const box = document.getElementById('exportBox');
-  box.textContent = txt;
-  box.style.display = 'block';
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(txt).then(() => {
-      const btn = event.target;
-      const orig = btn.textContent;
-      btn.textContent = '✓ Copiado';
-      setTimeout(() => btn.textContent = orig, 2000);
-    });
-  }
+  if (box) { box.textContent=txt; box.style.display='block'; }
+  navigator.clipboard&&navigator.clipboard.writeText(txt);
 }
 
-function printPage() {
-  window.print();
-}
+function printPage() { window.print(); }
 
-// ── Autosave on input ──
-document.addEventListener('input', () => saveDraft());
-document.addEventListener('change', () => saveDraft());
+document.addEventListener('input',  saveDraft);
+document.addEventListener('change', saveDraft);
 
-// ── Init ──
 buildUI();
 goTo(0);
-
-// Inyectar botón submit y banner en sección calidad
-document.querySelector('#panel_6 .section-card-body').insertAdjacentHTML('afterbegin', `
-  <div id="draftBanner" style="display:none;align-items:center;gap:10px;background:var(--info-bg);border:0.5px solid rgba(24,95,165,0.2);border-radius:var(--radius);padding:10px 14px;margin-bottom:1rem;font-size:12px;color:var(--info-text)">
-    <span>📋</span>
-    <span><strong>Borrador recuperado.</strong> Tus datos anteriores fueron restaurados automáticamente.</span>
-    <button onclick="clearDraft()" style="margin-left:auto;font-size:11px;padding:3px 8px;border-radius:4px;border:0.5px solid var(--info-text);background:transparent;color:var(--info-text);cursor:pointer">Descartar</button>
-  </div>`);
-
-// Agregar botón submit al área de export
-setTimeout(() => {
-  const exportArea = document.getElementById('exportBox');
-  if (exportArea) {
-    exportArea.insertAdjacentHTML('beforebegin', `
-      <div id="submitStatus" style="margin-bottom:0.75rem"></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:0.75rem">
-        <button id="btnSubmit" class="btn btn-primary" onclick="submitToSheets()">Guardar en Google Sheets</button>
-        <button class="btn" onclick="copyJSON()">Copiar JSON</button>
-        <button class="btn" onclick="printPage()">Imprimir / PDF</button>
-      </div>`);
-  }
-}, 100);
-
 loadDraft();
 </script>
 </body>
