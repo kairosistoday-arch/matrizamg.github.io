@@ -300,7 +300,6 @@ const SECTIONS = [
     {key:'tipo_producto',   label:'Tipo producto',   type:'select', req:true, opts:['','Programa','Curso','Workshop','Diploma','Masterclass','Otro']},
     {key:'responsable',     label:'Responsable AMG', type:'text',   req:true},
     {key:'estado',          label:'Estado campaña',  type:'select', req:true, opts:['','Planificación','Activa','Pausada','Finalizada','Cerrada','Cancelada']},
-    {key:'id_campana',      label:'ID campaña AMG',  type:'text',   auto:true},
   ]},
   { title:'Fechas', emoji:'📅', color:'#49C5B1', fields:[
     {key:'fecha_inicio', label:'Inicio pauta',    type:'date', req:true},
@@ -443,6 +442,35 @@ function loadRecords() {
     document.getElementById('tableContainer').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Error de conexión</h3><p>No se pudieron cargar los registros. Verifica que el webhook esté publicado como "Cualquier persona".</p></div>';
   }, 10000);
 
+  const s = document.createElement('script');
+  s.id  = 'jsonp_script';
+  s.src = WEBHOOK + '?callback=' + cbName + '&t=' + Date.now();
+  document.body.appendChild(s);
+}
+
+function loadRecordsAndSelect(idToSelect) {
+  const old = document.getElementById('jsonp_script');
+  if (old) old.remove();
+  if (window._jsonpTimeout) clearTimeout(window._jsonpTimeout);
+
+  const cbName = '_amgCb_' + Date.now();
+  window[cbName] = function(json) {
+    delete window[cbName];
+    document.getElementById('jsonp_script')?.remove();
+    clearTimeout(window._jsonpTimeout);
+    records  = json.records || [];
+    filtered = [...records];
+    renderTable();
+    updateStats();
+    if (idToSelect) {
+      const found = records.find(r => r['ID Campaña AMG'] === idToSelect);
+      if (found) { selectedId = idToSelect; renderTable(); switchTab('dash'); renderDash(found); }
+    }
+  };
+  window._jsonpTimeout = setTimeout(() => {
+    delete window[cbName];
+    document.getElementById('jsonp_script')?.remove();
+  }, 10000);
   const s = document.createElement('script');
   s.id  = 'jsonp_script';
   s.src = WEBHOOK + '?callback=' + cbName + '&t=' + Date.now();
@@ -679,8 +707,11 @@ async function saveRecord() {
   try {
     await fetch(WEBHOOK, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
     toast(editingRow ? '✓ Registro actualizado' : '✓ Cierre guardado', 'success');
+    const savedId = current.id_campana || null;
     closePanel();
-    setTimeout(loadRecords, 800);
+    setTimeout(() => {
+      loadRecordsAndSelect(savedId);
+    }, 1200);
   } catch(e) {
     toast('Error al guardar. Verifica conexión.', 'error');
   } finally {
@@ -690,19 +721,47 @@ async function saveRecord() {
 
 // ── Delete ──
 let deleteRow = null;
-function prepareDelete(r) { deleteRow = r; document.getElementById('modalOverlay').classList.add('open'); }
-function confirmDelete()  { deleteRow = { _row: editingRow }; document.getElementById('modalOverlay').classList.add('open'); }
-function closeModal()     { document.getElementById('modalOverlay').classList.remove('open'); deleteRow = null; }
+
+// Desde la tabla (botón 🗑️)
+function prepareDelete(r) {
+  deleteRow = { _row: r._row, nombre: r['Nombre producto'] || 'este cierre' };
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+// Desde el panel lateral (botón Eliminar)
+function confirmDelete() {
+  deleteRow = { _row: editingRow, nombre: current.nombre_producto || 'este cierre' };
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  deleteRow = null;
+}
 
 async function deleteRecord() {
-  if (!deleteRow) return;
+  if (!deleteRow || !deleteRow._row) {
+    toast('No se pudo identificar el registro a eliminar', 'error');
+    closeModal();
+    return;
+  }
+  const rowNum = parseInt(deleteRow._row);
   closeModal();
   try {
-    await fetch(WEBHOOK, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ _action:'delete', _row: deleteRow._row }) });
-    toast('Registro eliminado', '');
+    await fetch(WEBHOOK, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ _action: 'delete', _row: rowNum })
+    });
+    toast('✓ Registro eliminado', '');
     closePanel();
-    setTimeout(loadRecords, 800);
-  } catch(e) { toast('Error al eliminar', 'error'); }
+    selectedId = null;
+    document.getElementById('dashContent').innerHTML = '<div class="dash-empty"><div style="font-size:40px;opacity:0.3;margin-bottom:1rem">📊</div><h3>Selecciona una campaña</h3><p style="font-size:13px;color:var(--text-muted)">Haz clic en una fila de la tabla para ver su dashboard.</p></div>';
+    setTimeout(loadRecords, 1000);
+  } catch(e) {
+    toast('Error al eliminar. Verifica conexión.', 'error');
+  }
 }
 
 // ── Dashboard ──
