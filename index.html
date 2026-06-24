@@ -312,8 +312,8 @@ textarea{resize:vertical;min-height:60px}
 
 <script>
 const WEBHOOK = 'https://script.google.com/macros/s/AKfycbxiKu2P_PIVY2igK_ltJUd2ixFaP3DNKNy001mCQC8plleQrf8JoOgPIX9F_ePkdpah/exec';
-const TOKEN   = 'AMG2026V1';
-const PWD_HASH = '70cbe4356fe121c081835514fb05465858df83af024ab66f452ca3e5f48d3f35';
+const TOKEN = 'AMG2026V1';
+window.PWD_HASH = 'VGVhbUluZWxBbWcyMDI2QA==';
 
 // ── Field definitions ──
 const SECTIONS = [
@@ -1030,29 +1030,30 @@ loadRecords();
 </div>
 
 <script>
-async function checkLogin() {
-  const val = document.getElementById('loginInput').value;
-  const encoder = new TextEncoder();
-  const data = encoder.encode(val);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  if (hashHex === PWD_HASH) {
-    document.getElementById('loginOverlay').style.display = 'none';
-    sessionStorage.setItem('amg_auth', '1');
-  } else {
-    const err = document.getElementById('loginError');
-    err.style.display = 'block';
-    document.getElementById('loginInput').value = '';
-    document.getElementById('loginInput').focus();
-    setTimeout(() => err.style.display = 'none', 3000);
+(function() {
+  var H = 'VGVhbUluZWxBbWcyMDI2QA==';
+  function checkLogin() {
+    var val = document.getElementById('loginInput').value.trim();
+    var a = atob(H);
+    if (val === a) {
+      document.getElementById('loginOverlay').style.display = 'none';
+      sessionStorage.setItem('amg_auth', '1');
+    } else {
+      var err = document.getElementById('loginError');
+      err.style.display = 'block';
+      document.getElementById('loginInput').value = '';
+      document.getElementById('loginInput').focus();
+      setTimeout(function(){ err.style.display = 'none'; }, 3000);
+    }
   }
-}
-
-// Check session on load
-if (sessionStorage.getItem('amg_auth') === '1') {
-  document.getElementById('loginOverlay').style.display = 'none';
-}
+  window.checkLogin = checkLogin;
+  document.addEventListener('DOMContentLoaded', function() {
+    if (sessionStorage.getItem('amg_auth') === '1') {
+      var ov = document.getElementById('loginOverlay');
+      if (ov) ov.style.display = 'none';
+    }
+  });
+})();
 </script>
 
 </body>
