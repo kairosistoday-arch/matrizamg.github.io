@@ -245,6 +245,9 @@ textarea { resize: vertical; min-height: 60px; }
 .gantt-bar-progress-line { position: absolute; top: 0; bottom: 0; width: 1.5px; background: rgba(255,255,255,0.9); z-index: 3; box-shadow: 0 0 4px rgba(0,0,0,0.3); }
 .gantt-bar-text { position: relative; z-index: 4; }
 .gantt-milestone { position: absolute; width: 12px; height: 12px; top: 0; border-radius: 2px; transform: rotate(45deg); }
+.gantt-bar-plan { position: absolute; top: 0; bottom: 0; background: #49C5B1; opacity: 0.18; border: 1px dashed #49C5B1; border-radius: 3px; z-index: 1; }
+.gantt-track-clases { overflow: visible; }
+.gantt-track-clases .gantt-bar { z-index: 2; }
 
 .detalle-picker { padding: 0; }
 .detalle-pick-card { background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 12px 14px; cursor: pointer; text-align: left; font-family: 'Space Grotesk', inherit; transition: all 0.15s; }
@@ -1356,12 +1359,16 @@ textarea { resize: vertical; min-height: 60px; }
     }
 
     function getCurrentStage(r) {
+      // For "clases" we use REAL dates (AEC) if available, else fallback to PLANNED (AEI)
+      var clasesStart = r.fecha_inicio_clases || r.fecha_inicio_producto || null;
+      var clasesEnd   = r.fecha_fin_clases    || r.fecha_fin_producto    || null;
+
       var stages = [
         { id: 'lanzamiento', label: 'AEI Lanzamiento', color: AREA_COLORS.AEI, start: r.fecha_lanzamiento, end: r.fecha_lanzamiento },
         { id: 'piezas',      label: 'AMG Piezas',      color: AREA_COLORS.AMG, start: r.fecha_inicio_piezas, end: r.fecha_fin_piezas },
         { id: 'pauta',       label: 'AMG Promo',       color: AREA_COLORS.AMG, start: r.fecha_inicio_pauta,  end: r.fecha_fin_pauta },
         { id: 'ventas',      label: 'AGC Ventas',      color: AREA_COLORS.AGC, start: r.fecha_inicio_ventas, end: r.fecha_fin_ventas },
-        { id: 'clases',      label: 'AEC Clases',      color: AREA_COLORS.AEC, start: r.fecha_inicio_clases, end: r.fecha_fin_clases }
+        { id: 'clases',      label: 'AEC Clases',      color: AREA_COLORS.AEC, start: clasesStart,            end: clasesEnd }
       ];
 
       var current = null;
@@ -1380,20 +1387,59 @@ textarea { resize: vertical; min-height: 60px; }
         if (today > new Date(current.end)) isLate = true;
       }
 
+      // Special case for clases: if planned but real not started
+      var aecPlanStart = r.fecha_inicio_producto ? new Date(r.fecha_inicio_producto) : null;
+      var aecPlanEnd   = r.fecha_fin_producto    ? new Date(r.fecha_fin_producto)    : null;
+      var aecRealStart = r.fecha_inicio_clases   ? new Date(r.fecha_inicio_clases)   : null;
+      var aecRealEnd   = r.fecha_fin_clases      ? new Date(r.fecha_fin_clases)      : null;
+      var aecFinalizado = r.estado_aec === 'Finalizado';
+
+      // PLANIFICADO NO EJECUTADO: AEI planeó, fecha ya empezó (o pasó), AEC no arrancó
+      if (!aecFinalizado && aecPlanStart && !aecRealStart && today >= aecPlanStart) {
+        // Si fecha plan fin ya pasó y AEC no llenó nada: atraso real
+        if (aecPlanEnd && today > aecPlanEnd) {
+          return { stage: { id: 'plan_no_ejecutado', label: '⚠ Planificado no ejecutado', color: '#DB0B5B' }, isLate: true };
+        }
+        // Fecha plan inicio pasó pero plan fin aún no: AEC debió haber empezado
+        return { stage: { id: 'plan_no_iniciado', label: '⚠ Clases debieron iniciar', color: '#DB0B5B' }, isLate: true };
+      }
+
       if (current) {
         return { stage: current, isLate: isLate, daysLeft: current.end ? Math.ceil((new Date(current.end) - today)/86400000) : null };
       }
 
-      var allEmpty = !r.fecha_lanzamiento && !r.fecha_inicio_piezas && !r.fecha_inicio_pauta && !r.fecha_inicio_ventas && !r.fecha_inicio_clases;
+      var allEmpty = !r.fecha_lanzamiento && !r.fecha_inicio_piezas && !r.fecha_inicio_pauta && !r.fecha_inicio_ventas && !r.fecha_inicio_clases && !r.fecha_inicio_producto;
       if (allEmpty) return { stage: { id: 'sindatos', label: 'Sin datos', color: '#b5b0b9' }, isLate: false };
 
-      var aecEnd = r.fecha_fin_clases ? new Date(r.fecha_fin_clases) : null;
-      if (aecEnd && today > aecEnd && r.estado_aec === 'Finalizado') {
+      // Detect "completado" with multiple criteria
+      if (aecFinalizado) {
+        return { stage: { id: 'completado', label: '✓ Completado', color: '#1a7a6a' }, isLate: false };
+      }
+      if (aecRealEnd && today > aecRealEnd) {
+        return { stage: { id: 'completado_pendiente', label: '✓ Clases finalizadas', color: '#1a7a6a' }, isLate: false };
+      }
+
+      // Si la última etapa con datos era Clases y ya pasó su fin (sea real o planificado)
+      if (latestEnd && latestEnd.id === 'clases' && today > new Date(latestEnd.end)) {
         return { stage: { id: 'completado', label: '✓ Completado', color: '#1a7a6a' }, isLate: false };
       }
 
+      // Una etapa intermedia terminó, esperando la siguiente
       if (latestEnd && today > new Date(latestEnd.end)) {
-        return { stage: { id: 'siguiente', label: 'Esperando ' + latestEnd.label.split(' ')[1], color: '#7a7672' }, isLate: false };
+        var nextStageName = '';
+        if (latestEnd.id === 'lanzamiento') nextStageName = 'Piezas';
+        else if (latestEnd.id === 'piezas') nextStageName = 'Pauta';
+        else if (latestEnd.id === 'pauta') nextStageName = 'Ventas';
+        else if (latestEnd.id === 'ventas') nextStageName = 'Clases';
+        if (nextStageName) {
+          return { stage: { id: 'siguiente', label: 'Esperando ' + nextStageName, color: '#7a7672' }, isLate: false };
+        }
+      }
+
+      // Si solo AEI planificó y aún no llega la fecha
+      if (aecPlanStart && today < aecPlanStart) {
+        var diasFalta = Math.ceil((aecPlanStart - today)/86400000);
+        return { stage: { id: 'plan_futuro', label: 'Planificado (inicia en ' + diasFalta + 'd)', color: '#7F77DD' }, isLate: false };
       }
 
       return { stage: { id: 'porempezar', label: 'Por empezar', color: '#7a7672' }, isLate: false };
@@ -1433,7 +1479,7 @@ textarea { resize: vertical; min-height: 60px; }
     visibleRecords.sort(function(a, b) {
       if (G.sort === 'nombre') return (a.nombre_producto||'').localeCompare(b.nombre_producto||'');
       if (G.sort === 'etapa') {
-        var orderMap = { 'lanzamiento':1, 'piezas':2, 'pauta':3, 'ventas':4, 'clases':5, 'completado':6, 'porempezar':0, 'sindatos':7 };
+        var orderMap = { 'plan_no_ejecutado':-1, 'plan_no_iniciado':-1, 'lanzamiento':1, 'piezas':2, 'pauta':3, 'ventas':4, 'clases':5, 'completado_pendiente':6, 'completado':7, 'plan_futuro':0, 'porempezar':0, 'sindatos':8, 'siguiente':4 };
         return (orderMap[getCurrentStage(a).stage.id]||0) - (orderMap[getCurrentStage(b).stage.id]||0);
       }
       if (G.sort === 'restantes') {
@@ -1506,7 +1552,8 @@ textarea { resize: vertical; min-height: 60px; }
       + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AMG + ';opacity:0.7"></div>AMG Piezas</div>'
       + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AMG + '"></div>AMG Promo</div>'
       + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AGC + '"></div>AGC Ventas</div>'
-      + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AEC + '"></div>AEC Clases</div>'
+      + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AEC + '"></div>AEC Clases (real)</div>'
+      + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AEC + ';opacity:0.18;border:1px dashed ' + AREA_COLORS.AEC + '"></div>AEC Clases (planificado)</div>'
       + '<div class="legend-item"><div style="width:2px;height:14px;background:#DB0B5B"></div>Hoy</div>'
       + '</div>';
 
@@ -1608,7 +1655,24 @@ textarea { resize: vertical; min-height: 60px; }
       html += '<div class="gantt-track">' + buildBar(r.fecha_inicio_piezas, r.fecha_fin_piezas, AREA_COLORS.AMG, 'Piezas', 'piezas') + '</div>';
       html += '<div class="gantt-track">' + buildBar(r.fecha_inicio_pauta, r.fecha_fin_pauta, AREA_COLORS.AMG, 'Pauta', 'pauta') + '</div>';
       html += '<div class="gantt-track">' + buildBar(r.fecha_inicio_ventas, r.fecha_fin_ventas, AREA_COLORS.AGC, 'Ventas', 'ventas') + '</div>';
-      html += '<div class="gantt-track">' + buildBar(r.fecha_inicio_clases, r.fecha_fin_clases, AREA_COLORS.AEC, 'Clases', 'clases') + '</div>';
+      // Clases: planificado (AEI) + real (AEC)
+      html += '<div class="gantt-track gantt-track-clases">';
+      // Planificado AEI (banda clara de fondo)
+      if (r.fecha_inicio_producto) {
+        var pp1 = pct(r.fecha_inicio_producto);
+        if (pp1 !== null) {
+          if (r.fecha_fin_producto) {
+            var pp2 = pct(r.fecha_fin_producto);
+            if (pp2 !== null) {
+              var pwidth = Math.max(pp2 - pp1, 0.5);
+              html += '<div class="gantt-bar-plan" style="left:' + pp1 + '%;width:' + pwidth + '%" title="Planificado AEI: ' + esc(r.fecha_inicio_producto + ' → ' + r.fecha_fin_producto) + '"></div>';
+            }
+          }
+        }
+      }
+      // Real AEC (barra sólida encima)
+      html += buildBar(r.fecha_inicio_clases, r.fecha_fin_clases, AREA_COLORS.AEC, 'Clases', 'clases');
+      html += '</div>';
 
       html += '</div></div></div>';
     });
