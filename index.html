@@ -417,19 +417,36 @@ function switchTab(tab) {
   if (tab==='dash' && selectedId) renderDash(records.find(r=>r['ID Campaña AMG']===selectedId));
 }
 
-// ── Load records ──
-async function loadRecords() {
+// ── Load records via JSONP (evita CORS) ──
+function loadRecords() {
   document.getElementById('tableContainer').innerHTML = '<div class="loading"><div class="spinner"></div> Cargando...</div>';
-  try {
-    const res  = await fetch(WEBHOOK + '?t=' + Date.now());
-    const json = await res.json();
-    records = json.records || [];
+
+  const old = document.getElementById('jsonp_script');
+  if (old) old.remove();
+  if (window._jsonpTimeout) clearTimeout(window._jsonpTimeout);
+
+  const cbName = '_amgCb_' + Date.now();
+
+  window[cbName] = function(json) {
+    delete window[cbName];
+    document.getElementById('jsonp_script')?.remove();
+    clearTimeout(window._jsonpTimeout);
+    records  = json.records || [];
     filtered = [...records];
     renderTable();
     updateStats();
-  } catch(e) {
-    document.getElementById('tableContainer').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Error de conexión</h3><p>No se pudieron cargar los registros. Verifica el webhook.</p></div>`;
-  }
+  };
+
+  window._jsonpTimeout = setTimeout(() => {
+    delete window[cbName];
+    document.getElementById('jsonp_script')?.remove();
+    document.getElementById('tableContainer').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Error de conexión</h3><p>No se pudieron cargar los registros. Verifica que el webhook esté publicado como "Cualquier persona".</p></div>';
+  }, 10000);
+
+  const s = document.createElement('script');
+  s.id  = 'jsonp_script';
+  s.src = WEBHOOK + '?callback=' + cbName + '&t=' + Date.now();
+  document.body.appendChild(s);
 }
 
 function updateStats() {
