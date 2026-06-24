@@ -416,9 +416,10 @@ textarea { resize: vertical; min-height: 60px; }
         { key: 'horas',                 label: 'Horas académicas',      type: 'number' },
         { key: 'precio_lista_soles',    label: 'Precio lista (S/.)',    type: 'number' },
         { key: 'precio_lista_usd',      label: 'Precio lista (USD)',    type: 'number' },
-        { key: 'estado_producto',       label: 'Estado producto',       type: 'select', opts: ['','Activo','Inactivo','En revisión','Descontinuado'] },
-        { key: 'frecuencia',            label: 'Frecuencia',            type: 'text', hint: 'Ej: 2 veces/semana, sabatino' },
-        { key: 'horario',               label: 'Horario',               type: 'text', hint: 'Ej: 7-10pm, sábados 9am-1pm' },
+        { key: 'estado_producto',       label: 'Estado producto',       type: 'select', opts: ['','Programado','Lanzado','Anulado'] },
+        { key: 'frecuencia',            label: 'Frecuencia',            type: 'select', opts: ['','Lunes y Miércoles','Martes y Jueves','Miércoles y Viernes','Lunes y Sábado','Martes y Sábado','Miércoles y Sábado','Jueves y Sábado','Viernes y Sábado','Sábados','Domingos','Sábados y Domingos','Lunes a Viernes','Otro'] },
+        { key: 'horario_1',             label: 'Horario 1',             type: 'text', hint: 'Ej: Lunes 7pm-9pm' },
+        { key: 'horario_2',             label: 'Horario 2',             type: 'text', hint: 'Ej: Sábado 9am-11am (opcional)' },
         { key: 'fecha_inicio_producto', label: 'Fecha inicio (catálogo)', type: 'date' },
         { key: 'fecha_fin_producto',    label: 'Fecha fin (catálogo)',  type: 'date' },
         { key: 'link_onedrive',         label: 'Link OneDrive (Brief, malla, etc.)', type: 'url', full: true }
@@ -540,14 +541,14 @@ textarea { resize: vertical; min-height: 60px; }
     },
     {
       id: 'aec_nps',
-      title: 'AEC · NPS del equipo (0-10)',
+      title: 'AEC · NPS del equipo (%)',
       emoji: '⭐',
       color: AREA_COLORS.AEC,
       areas: ['AEC'],
       fields: [
-        { key: 'nps_instructor', label: 'NPS instructor', type: 'number', hint: 'Escala 0-10' },
-        { key: 'nps_asistente',  label: 'NPS asistente',  type: 'number', hint: 'Escala 0-10' },
-        { key: 'nps_tutor',      label: 'NPS tutor',      type: 'number', hint: 'Escala 0-10' },
+        { key: 'nps_instructor', label: 'NPS instructor (%)', type: 'number', hint: 'Porcentaje 0-100' },
+        { key: 'nps_asistente',  label: 'NPS asistente (%)',  type: 'number', hint: 'Porcentaje 0-100' },
+        { key: 'nps_tutor',      label: 'NPS tutor (%)',      type: 'number', hint: 'Porcentaje 0-100' },
         { key: 'nps_promedio',   label: 'NPS promedio',   type: 'text', auto: true }
       ]
     },
@@ -1138,7 +1139,7 @@ textarea { resize: vertical; min-height: 60px; }
       + '<div class="kpi-card kc-teal"><div class="kpi-label">Leads totales</div><div class="kpi-value">' + totalLeads.toLocaleString('es-PE') + '</div><div class="kpi-sub">todas las campañas</div></div>'
       + '<div class="kpi-card kc-mag"><div class="kpi-label">CPL promedio</div><div class="kpi-value">' + (cplProm>0?fv(cplProm,2):'—') + '</div><div class="kpi-sub">inv./leads</div></div>'
       + '<div class="kpi-card kc-org"><div class="kpi-label">Inv. pub. total</div><div class="kpi-value">' + fv(totalInv,0) + '</div><div class="kpi-sub">gasto: ' + fv(totalGasto,0) + '</div></div>'
-      + '<div class="kpi-card kc-aei"><div class="kpi-label">NPS promedio</div><div class="kpi-value">' + npsAvg + '</div><div class="kpi-sub">' + npsValues.length + ' programas evaluados</div></div>'
+      + '<div class="kpi-card kc-aei"><div class="kpi-label">NPS promedio</div><div class="kpi-value">' + (npsAvg === '—' ? '—' : npsAvg + '%') + '</div><div class="kpi-sub">' + npsValues.length + ' programas evaluados</div></div>'
       + '<div class="kpi-card kc-teal"><div class="kpi-label">Eval. docente</div><div class="kpi-value">' + evalAvg + '</div><div class="kpi-sub">' + evalValues.length + ' instructores</div></div>'
       + '</div>';
 
@@ -1184,8 +1185,8 @@ textarea { resize: vertical; min-height: 60px; }
       html += '<div class="dash-card dash-card-full"><div class="dash-card-title">Ranking NPS por programa</div>';
       byNps.forEach(function(r) {
         var v = parseFloat(r.nps_promedio);
-        var color = v >= 8 ? '#1a7a6a' : v >= 6 ? '#FF6900' : '#DB0B5B';
-        html += '<div class="bar-row" style="cursor:pointer" data-row="' + r._row + '"><div class="bar-label" title="' + esc(r.nombre_producto) + '">' + esc((r.nombre_producto||'—').substring(0,28)) + '</div><div class="bar-track"><div class="bar-fill" style="width:' + Math.round(v*10) + '%;background:' + color + '"></div></div><div class="bar-val">' + v + '/10</div></div>';
+        var color = v >= 80 ? '#1a7a6a' : v >= 60 ? '#FF6900' : '#DB0B5B';
+        html += '<div class="bar-row" style="cursor:pointer" data-row="' + r._row + '"><div class="bar-label" title="' + esc(r.nombre_producto) + '">' + esc((r.nombre_producto||'—').substring(0,28)) + '</div><div class="bar-track"><div class="bar-fill" style="width:' + Math.min(v,100) + '%;background:' + color + '"></div></div><div class="bar-val">' + v + '%</div></div>';
       });
       html += '</div>';
     }
@@ -1363,7 +1364,7 @@ textarea { resize: vertical; min-height: 60px; }
       + '<div class="kpi-card kc-teal"><div class="kpi-label">Leads totales</div><div class="kpi-value">' + (r.leads_totales||'—') + '</div><div class="kpi-sub">' + (r.leads_diarios||'') + ' leads/día</div></div>'
       + '<div class="kpi-card kc-mag"><div class="kpi-label">CPL pub.</div><div class="kpi-value">' + (r.cpl_pub||'—') + '</div><div class="kpi-sub">' + mon + '</div></div>'
       + '<div class="kpi-card kc-org"><div class="kpi-label">CTR</div><div class="kpi-value">' + (r.ctr||'—') + '</div><div class="kpi-sub">Clics/impresiones</div></div>'
-      + '<div class="kpi-card kc-aei"><div class="kpi-label">NPS promedio</div><div class="kpi-value">' + (r.nps_promedio || '—') + '</div><div class="kpi-sub">/10</div></div>'
+      + '<div class="kpi-card kc-aei"><div class="kpi-label">NPS promedio</div><div class="kpi-value">' + (r.nps_promedio ? r.nps_promedio + '%' : '—') + '</div><div class="kpi-sub">satisfacción</div></div>'
       + '<div class="kpi-card kc-teal"><div class="kpi-label">Eval. docente</div><div class="kpi-value">' + (r.eval_promedio||'—') + '</div><div class="kpi-sub">instructor</div></div>'
       + '</div>';
 
