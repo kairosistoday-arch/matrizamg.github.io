@@ -433,8 +433,7 @@ textarea { resize: vertical; min-height: 60px; }
       areas: ['AEI'],
       fields: [
         { key: 'fecha_lanzamiento', label: 'Fecha lanzamiento interno', type: 'date', hint: 'Envío a AMG' },
-        { key: 'resp_aei',          label: 'Responsable AEI', type: 'select', respArea: 'AEI' },
-        { key: 'estado_aei',        label: 'Estado AEI', type: 'select', opts: ['','Pendiente','Lanzado','Cancelado'] }
+        { key: 'resp_aei',          label: 'Responsable AEI', type: 'select', respArea: 'AEI' }
       ]
     },
     {
@@ -471,6 +470,7 @@ textarea { resize: vertical; min-height: 60px; }
         { key: 'impresiones',        label: 'Impresiones',         type: 'number' },
         { key: 'clics',              label: 'Clics',               type: 'number' },
         { key: 'leads_forms',        label: 'Leads Forms',         type: 'number' },
+        { key: 'leads_meta',         label: 'Leads Meta',          type: 'number' },
         { key: 'leads_wa',           label: 'Leads WhatsApp',      type: 'number' },
         { key: 'leads_li',           label: 'Leads LinkedIn',      type: 'number' },
         { key: 'leads_google',       label: 'Leads Google Ads',    type: 'number' },
@@ -605,7 +605,8 @@ textarea { resize: vertical; min-height: 60px; }
 
   function statusClass(estado) {
     var m = {
-      'Lanzado':'st-aei-lanzado','Pendiente':'st-aec-pend',
+      'Lanzado':'st-aei-lanzado','Programado':'st-aec-pend','Anulado':'st-amg-cancelado',
+      'Pendiente':'st-aec-pend',
       'En promocionamiento':'st-amg-promo','Promocionado':'st-amg-promocionado',
       'En venta':'st-agc-venta','Finalizado':'st-agc-final',
       'En clases':'st-aec-clases','Cancelado':'st-amg-cancelado'
@@ -615,9 +616,9 @@ textarea { resize: vertical; min-height: 60px; }
 
   function getStageStatus(r) {
     var aei = 'empty', amg = 'empty', agc = 'empty', aec = 'empty';
-    if (r.estado_aei === 'Cancelado') aei = 'cancel';
-    else if (r.estado_aei === 'Lanzado') aei = 'done';
-    else if (r.cod_producto || r.nombre_producto || r.resp_aei) aei = 'progress';
+    if (r.estado_producto === 'Anulado') aei = 'cancel';
+    else if (r.estado_producto === 'Lanzado') aei = 'done';
+    else if (r.cod_producto || r.nombre_producto || r.resp_aei || r.estado_producto === 'Programado') aei = 'progress';
 
     if (r.estado_amg === 'Cancelado') amg = 'cancel';
     else if (r.estado_amg === 'Promocionado') amg = 'done';
@@ -644,7 +645,7 @@ textarea { resize: vertical; min-height: 60px; }
     var fi = d.fecha_inicio_pauta ? new Date(d.fecha_inicio_pauta) : null;
     var ff = d.fecha_fin_pauta ? new Date(d.fecha_fin_pauta) : null;
     d.dias_pauta = (fi && ff && ff >= fi) ? Math.round((ff-fi)/86400000)+1 : '';
-    d.leads_pauta = g(d,'leads_forms')+g(d,'leads_wa')+g(d,'leads_li')+g(d,'leads_google');
+    d.leads_pauta = g(d,'leads_forms')+g(d,'leads_meta')+g(d,'leads_wa')+g(d,'leads_li')+g(d,'leads_google');
     d.leads_totales = d.leads_pauta + g(d,'leads_eventos') + g(d,'leads_organicos');
     d.cpl_pub = d.leads_pauta>0 ? fv(d.inv_pub_total/d.leads_pauta, 2) : '';
     d.ctr = g(d,'impresiones')>0 ? fp(g(d,'clics')/g(d,'impresiones')) : '';
@@ -1313,6 +1314,7 @@ textarea { resize: vertical; min-height: 60px; }
 
     var leadSrc = [
       {l:'Forms',v:parseFloat(r.leads_forms)||0,c:'#0857C3'},
+      {l:'Meta',v:parseFloat(r.leads_meta)||0,c:'#1877F2'},
       {l:'WhatsApp',v:parseFloat(r.leads_wa)||0,c:'#49C5B1'},
       {l:'LinkedIn',v:parseFloat(r.leads_li)||0,c:'#DB0B5B'},
       {l:'Google Ads',v:parseFloat(r.leads_google)||0,c:'#FF6900'},
@@ -1352,7 +1354,7 @@ textarea { resize: vertical; min-height: 60px; }
     html += '</div>';
 
     html += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem">';
-    if (r.estado_aei) html += '<span class="status-pill ' + statusClass(r.estado_aei) + '">AEI: ' + esc(r.estado_aei) + '</span>';
+    if (r.estado_producto) html += '<span class="status-pill ' + statusClass(r.estado_producto) + '">AEI: ' + esc(r.estado_producto) + '</span>';
     if (r.estado_amg) html += '<span class="status-pill ' + statusClass(r.estado_amg) + '">AMG: ' + esc(r.estado_amg) + '</span>';
     if (r.estado_agc) html += '<span class="status-pill ' + statusClass(r.estado_agc) + '">AGC: ' + esc(r.estado_agc) + '</span>';
     if (r.estado_aec) html += '<span class="status-pill ' + statusClass(r.estado_aec) + '">AEC: ' + esc(r.estado_aec) + '</span>';
