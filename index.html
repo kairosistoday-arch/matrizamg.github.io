@@ -313,7 +313,7 @@ textarea{resize:vertical;min-height:60px}
 <script>
 const WEBHOOK = 'https://script.google.com/macros/s/AKfycbxiKu2P_PIVY2igK_ltJUd2ixFaP3DNKNy001mCQC8plleQrf8JoOgPIX9F_ePkdpah/exec';
 const TOKEN   = 'AMG2026V1';
-const PWD_HASH = 'TeamInelAmg2026@';
+const PWD_HASH = '70cbe4356fe121c081835514fb05465858df83af024ab66f452ca3e5f48d3f35';
 
 // ── Field definitions ──
 const SECTIONS = [
@@ -1030,9 +1030,14 @@ loadRecords();
 </div>
 
 <script>
-function checkLogin() {
+async function checkLogin() {
   const val = document.getElementById('loginInput').value;
-  if (val === PWD_HASH) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(val);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  if (hashHex === PWD_HASH) {
     document.getElementById('loginOverlay').style.display = 'none';
     sessionStorage.setItem('amg_auth', '1');
   } else {
