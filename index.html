@@ -199,21 +199,52 @@ textarea { resize: vertical; min-height: 60px; }
 .info-val { font-weight: 700; color: var(--text); font-family: monospace; font-size: 11px; }
 .dash-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; text-align: center; color: var(--text-muted); }
 
-.gantt-wrap { overflow-x: auto; }
+/* ── Gantt Advanced ── */
+.gantt-controls { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 1rem; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.gantt-ctrl-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.gantt-ctrl-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 2px; }
+.gantt-pill { padding: 4px 10px; border-radius: 14px; font-size: 11px; font-weight: 600; font-family: 'Space Grotesk', inherit; cursor: pointer; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-muted); transition: all 0.15s; }
+.gantt-pill:hover { background: var(--bg); }
+.gantt-pill.active { background: var(--blue); color: white; border-color: var(--blue); }
+
+.gantt-legend { display: flex; gap: 14px; margin: 0 0 1rem; flex-wrap: wrap; font-size: 11px; padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-muted); }
+.legend-swatch { width: 14px; height: 12px; border-radius: 2px; }
+
+.gantt-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0; }
 .gantt { width: 100%; min-width: 800px; }
-.gantt-product-row { display: grid; grid-template-columns: 220px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
-.gantt-product-name { font-size: 12px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 4px 0; }
+
+.gantt-axis-row { display: grid; grid-template-columns: 220px 1fr; border-bottom: 2px solid var(--border-strong); }
+.gantt-side-col { padding: 10px 14px; border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; justify-content: center; min-height: 50px; }
+.gantt-side-header { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.gantt-axis { position: relative; padding: 10px 0; min-height: 50px; }
+.gantt-axis-mark { position: absolute; top: 0; bottom: 0; transform: translateX(-50%); }
+.gantt-axis-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--border); }
+.gantt-axis-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; font-weight: 700; color: var(--text-muted); white-space: nowrap; background: var(--surface); padding: 2px 6px; }
+
+.gantt-today-line { position: absolute; top: 0; bottom: 0; width: 2px; background: #DB0B5B; z-index: 5; }
+.gantt-today-label { position: absolute; top: 4px; left: 4px; background: #DB0B5B; color: white; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px; white-space: nowrap; letter-spacing: 0.04em; }
+.gantt-today-line-row { position: absolute; top: 0; bottom: 0; width: 2px; background: #DB0B5B; z-index: 5; pointer-events: none; }
+
+.gantt-product-row { display: grid; grid-template-columns: 220px 1fr; min-height: 90px; border-bottom: 1px solid var(--border); }
+.gantt-product-row:hover .gantt-side-col { background: var(--bg); }
+.gantt-product-row:last-child { border-bottom: none; }
+.gantt-product-name { font-size: 12px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .gantt-product-code { font-size: 10px; font-family: monospace; color: var(--text-muted); }
-.gantt-tracks { display: flex; flex-direction: column; gap: 3px; position: relative; }
-.gantt-track { position: relative; height: 14px; background: var(--bg); border-radius: 3px; }
-.gantt-bar { position: absolute; top: 0; bottom: 0; border-radius: 3px; padding: 0 6px; display: flex; align-items: center; font-size: 9px; font-weight: 700; color: white; overflow: hidden; white-space: nowrap; }
+.gantt-stage-tag { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 700; border: 1px solid; margin-top: 3px; flex-wrap: wrap; max-width: 100%; }
+.gantt-days-badge { background: rgba(0,0,0,0.08); color: inherit; padding: 1px 5px; border-radius: 2px; font-size: 9px; font-weight: 700; }
+.gantt-late-badge { background: #DB0B5B; color: white; padding: 1px 5px; border-radius: 2px; font-size: 9px; font-weight: 700; letter-spacing: 0.04em; }
+
+.gantt-tracks-area { position: relative; padding: 8px 0; }
+.gantt-grid-line { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--border); opacity: 0.5; }
+.gantt-tracks { display: flex; flex-direction: column; gap: 3px; position: relative; padding: 0 4px; }
+.gantt-track { position: relative; height: 13px; background: var(--bg); border-radius: 3px; }
+.gantt-bar { position: absolute; top: 0; bottom: 0; border-radius: 3px; padding: 0 6px; display: flex; align-items: center; font-size: 9px; font-weight: 700; color: white; overflow: hidden; white-space: nowrap; z-index: 2; }
 .gantt-bar.dashed { background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255,255,255,0.3) 4px, rgba(255,255,255,0.3) 8px); }
-.gantt-milestone { position: absolute; width: 12px; height: 12px; top: 1px; border-radius: 2px; transform: rotate(45deg); }
-.gantt-header { display: grid; grid-template-columns: 220px 1fr; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--border-strong); font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-.gantt-dates { display: flex; justify-content: space-between; padding: 0 4px; }
-.gantt-legend { display: flex; gap: 14px; margin-top: 12px; flex-wrap: wrap; font-size: 11px; }
-.legend-item { display: flex; align-items: center; gap: 5px; color: var(--text-muted); }
-.legend-swatch { width: 12px; height: 12px; border-radius: 2px; }
+.gantt-bar-future { position: absolute; top: 0; bottom: 0; background: rgba(255,255,255,0.5); z-index: 1; }
+.gantt-bar-progress-line { position: absolute; top: 0; bottom: 0; width: 1.5px; background: rgba(255,255,255,0.9); z-index: 3; box-shadow: 0 0 4px rgba(0,0,0,0.3); }
+.gantt-bar-text { position: relative; z-index: 4; }
+.gantt-milestone { position: absolute; width: 12px; height: 12px; top: 0; border-radius: 2px; transform: rotate(45deg); }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(61,57,53,0.5); z-index: 100; display: none; align-items: center; justify-content: center; }
 .modal-overlay.open { display: flex; }
@@ -1220,14 +1251,48 @@ textarea { resize: vertical; min-height: 60px; }
     });
 
     if (!allDates.length) {
-      el.innerHTML = '<div class="dash-empty"><div style="font-size:40px;opacity:0.3;margin-bottom:1rem">📅</div><h3>Sin fechas</h3><p>Aún no hay fechas registradas.</p></div>';
+      el.innerHTML = '<div class="dash-empty"><div style="font-size:40px;opacity:0.3;margin-bottom:1rem">📅</div><h3>Sin fechas</h3><p>Aún no hay fechas registradas en ningún producto.</p></div>';
       return;
     }
 
+    if (!window._gantt) {
+      window._gantt = { zoom: 'mensual', filter: 'todos', sort: 'lanzamiento' };
+    }
+    var G = window._gantt;
+
+    var today = new Date();
+    today.setHours(0,0,0,0);
+
     var minDate = new Date(Math.min.apply(null, allDates));
     var maxDate = new Date(Math.max.apply(null, allDates));
-    minDate.setDate(minDate.getDate() - 3);
-    maxDate.setDate(maxDate.getDate() + 3);
+
+    function snap(d, mode, direction) {
+      var dd = new Date(d);
+      if (mode === 'semanal') {
+        var day = dd.getDay();
+        var diff = direction === -1 ? (day === 0 ? -6 : 1 - day) : (day === 0 ? 1 : 8 - day);
+        dd.setDate(dd.getDate() + diff);
+      } else if (mode === 'mensual') {
+        if (direction === -1) dd.setDate(1);
+        else { dd.setMonth(dd.getMonth()+1); dd.setDate(0); }
+      } else if (mode === 'trimestral') {
+        var m = dd.getMonth();
+        if (direction === -1) { dd.setMonth(Math.floor(m/3)*3); dd.setDate(1); }
+        else { dd.setMonth(Math.floor(m/3)*3 + 3); dd.setDate(0); }
+      } else if (mode === 'anual') {
+        if (direction === -1) { dd.setMonth(0); dd.setDate(1); }
+        else { dd.setMonth(11); dd.setDate(31); }
+      }
+      dd.setHours(0,0,0,0);
+      return dd;
+    }
+
+    minDate = snap(minDate, G.zoom, -1);
+    maxDate = snap(maxDate, G.zoom, 1);
+
+    if (today < minDate) minDate = snap(today, G.zoom, -1);
+    if (today > maxDate) maxDate = snap(today, G.zoom, 1);
+
     var totalMs = maxDate - minDate;
     if (totalMs <= 0) totalMs = 86400000;
 
@@ -1237,68 +1302,325 @@ textarea { resize: vertical; min-height: 60px; }
       return ((dd - minDate) / totalMs) * 100;
     }
 
-    var html = '<div style="margin-bottom:1rem"><div style="font-size:16px;font-weight:700">Cronograma general</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Período: ' + minDate.toLocaleDateString('es-PE') + ' → ' + maxDate.toLocaleDateString('es-PE') + '</div></div>';
+    function getCurrentStage(r) {
+      var stages = [
+        { id: 'lanzamiento', label: 'AEI Lanzamiento', color: AREA_COLORS.AEI, start: r.fecha_lanzamiento, end: r.fecha_lanzamiento },
+        { id: 'piezas',      label: 'AMG Piezas',      color: AREA_COLORS.AMG, start: r.fecha_inicio_piezas, end: r.fecha_fin_piezas },
+        { id: 'pauta',       label: 'AMG Promo',       color: AREA_COLORS.AMG, start: r.fecha_inicio_pauta,  end: r.fecha_fin_pauta },
+        { id: 'ventas',      label: 'AGC Ventas',      color: AREA_COLORS.AGC, start: r.fecha_inicio_ventas, end: r.fecha_fin_ventas },
+        { id: 'clases',      label: 'AEC Clases',      color: AREA_COLORS.AEC, start: r.fecha_inicio_clases, end: r.fecha_fin_clases }
+      ];
 
-    html += '<div class="gantt-legend" style="margin-bottom:1rem">'
+      var current = null;
+      var latestEnd = null;
+
+      stages.forEach(function(s) {
+        if (!s.start) return;
+        var st = new Date(s.start);
+        var en = s.end ? new Date(s.end) : null;
+        if (today >= st && (!en || today <= en)) current = s;
+        if (en && today > en) latestEnd = s;
+      });
+
+      var isLate = false;
+      if (current && current.end) {
+        if (today > new Date(current.end)) isLate = true;
+      }
+
+      if (current) {
+        return { stage: current, isLate: isLate, daysLeft: current.end ? Math.ceil((new Date(current.end) - today)/86400000) : null };
+      }
+
+      var allEmpty = !r.fecha_lanzamiento && !r.fecha_inicio_piezas && !r.fecha_inicio_pauta && !r.fecha_inicio_ventas && !r.fecha_inicio_clases;
+      if (allEmpty) return { stage: { id: 'sindatos', label: 'Sin datos', color: '#b5b0b9' }, isLate: false };
+
+      var aecEnd = r.fecha_fin_clases ? new Date(r.fecha_fin_clases) : null;
+      if (aecEnd && today > aecEnd && r.estado_aec === 'Finalizado') {
+        return { stage: { id: 'completado', label: '✓ Completado', color: '#1a7a6a' }, isLate: false };
+      }
+
+      if (latestEnd && today > new Date(latestEnd.end)) {
+        return { stage: { id: 'siguiente', label: 'Esperando ' + latestEnd.label.split(' ')[1], color: '#7a7672' }, isLate: false };
+      }
+
+      return { stage: { id: 'porempezar', label: 'Por empezar', color: '#7a7672' }, isLate: false };
+    }
+
+    var visibleRecords = records.slice();
+    if (G.filter === 'encurso') {
+      visibleRecords = visibleRecords.filter(function(r) {
+        var s = getCurrentStage(r);
+        return s.stage.id !== 'sindatos' && s.stage.id !== 'completado' && s.stage.id !== 'porempezar';
+      });
+    } else if (G.filter === 'atrasados') {
+      visibleRecords = visibleRecords.filter(function(r) { return getCurrentStage(r).isLate; });
+    } else if (G.filter === 'mes') {
+      var monthStart = new Date(today); monthStart.setDate(1);
+      var monthEnd = new Date(monthStart); monthEnd.setMonth(monthEnd.getMonth()+1); monthEnd.setDate(0);
+      visibleRecords = visibleRecords.filter(function(r) {
+        var keys = ['fecha_lanzamiento','fecha_inicio_piezas','fecha_fin_piezas','fecha_inicio_pauta','fecha_fin_pauta','fecha_inicio_ventas','fecha_fin_ventas','fecha_inicio_clases','fecha_fin_clases'];
+        return keys.some(function(k) {
+          if (!r[k]) return false;
+          var d = new Date(r[k]);
+          return d >= monthStart && d <= monthEnd;
+        });
+      });
+    } else if (G.filter === 'proximos') {
+      var soon = new Date(today); soon.setDate(soon.getDate()+14);
+      visibleRecords = visibleRecords.filter(function(r) {
+        var keys = ['fecha_lanzamiento','fecha_inicio_piezas','fecha_inicio_pauta','fecha_inicio_ventas','fecha_inicio_clases'];
+        return keys.some(function(k) {
+          if (!r[k]) return false;
+          var d = new Date(r[k]);
+          return d >= today && d <= soon;
+        });
+      });
+    }
+
+    visibleRecords.sort(function(a, b) {
+      if (G.sort === 'nombre') return (a.nombre_producto||'').localeCompare(b.nombre_producto||'');
+      if (G.sort === 'etapa') {
+        var orderMap = { 'lanzamiento':1, 'piezas':2, 'pauta':3, 'ventas':4, 'clases':5, 'completado':6, 'porempezar':0, 'sindatos':7 };
+        return (orderMap[getCurrentStage(a).stage.id]||0) - (orderMap[getCurrentStage(b).stage.id]||0);
+      }
+      if (G.sort === 'restantes') {
+        var da = getCurrentStage(a).daysLeft, db = getCurrentStage(b).daysLeft;
+        if (da === null) return 1;
+        if (db === null) return -1;
+        return da - db;
+      }
+      var fa = a.fecha_lanzamiento ? new Date(a.fecha_lanzamiento).getTime() : Infinity;
+      var fb = b.fecha_lanzamiento ? new Date(b.fecha_lanzamiento).getTime() : Infinity;
+      return fa - fb;
+    });
+
+    var markers = [];
+    var cur = new Date(minDate);
+    while (cur <= maxDate) {
+      markers.push(new Date(cur));
+      if (G.zoom === 'semanal') cur.setDate(cur.getDate() + 7);
+      else if (G.zoom === 'mensual') cur.setMonth(cur.getMonth() + 1);
+      else if (G.zoom === 'trimestral') cur.setMonth(cur.getMonth() + 3);
+      else cur.setFullYear(cur.getFullYear() + 1);
+    }
+
+    function markerLabel(d) {
+      var months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      if (G.zoom === 'semanal') return d.getDate() + ' ' + months[d.getMonth()];
+      if (G.zoom === 'mensual') return months[d.getMonth()] + ' ' + (d.getFullYear()%100);
+      if (G.zoom === 'trimestral') return 'Q' + (Math.floor(d.getMonth()/3)+1) + ' ' + d.getFullYear();
+      return d.getFullYear();
+    }
+
+    var minWidth = 800;
+    if (G.zoom === 'semanal') minWidth = Math.max(800, markers.length * 80);
+    else if (G.zoom === 'mensual') minWidth = Math.max(900, markers.length * 90);
+    else if (G.zoom === 'trimestral') minWidth = Math.max(900, markers.length * 140);
+
+    var todayPctRaw = pct(today);
+    var todayInRange = todayPctRaw !== null && todayPctRaw >= 0 && todayPctRaw <= 100;
+
+    var html = '';
+
+    html += '<div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem">';
+    html += '<div><div style="font-size:16px;font-weight:700">Cronograma · ' + visibleRecords.length + ' productos</div>';
+    html += '<div style="font-size:11px;color:var(--text-muted);margin-top:2px">Hoy: ' + today.toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric'}) + '</div></div>';
+    html += '<button class="btn btn-sm" id="ganttExportBtn">📥 Exportar PNG</button>';
+    html += '</div>';
+
+    html += '<div class="gantt-controls">';
+    html += '<div class="gantt-ctrl-group"><span class="gantt-ctrl-label">Zoom:</span>';
+    ['semanal','mensual','trimestral','anual'].forEach(function(z) {
+      html += '<button class="gantt-pill' + (G.zoom===z?' active':'') + '" data-zoom="' + z + '">' + z.charAt(0).toUpperCase() + z.slice(1) + '</button>';
+    });
+    html += '</div>';
+    html += '<div class="gantt-ctrl-group"><span class="gantt-ctrl-label">Mostrar:</span>';
+    var filters = [['todos','Todos'],['encurso','En curso'],['atrasados','Atrasados'],['mes','Este mes'],['proximos','Próximos 14d']];
+    filters.forEach(function(f) {
+      html += '<button class="gantt-pill' + (G.filter===f[0]?' active':'') + '" data-filter="' + f[0] + '">' + f[1] + '</button>';
+    });
+    html += '</div>';
+    html += '<div class="gantt-ctrl-group"><span class="gantt-ctrl-label">Ordenar:</span>';
+    var sorts = [['lanzamiento','Lanzamiento'],['nombre','Nombre'],['etapa','Etapa'],['restantes','Días restantes']];
+    sorts.forEach(function(s) {
+      html += '<button class="gantt-pill' + (G.sort===s[0]?' active':'') + '" data-sort="' + s[0] + '">' + s[1] + '</button>';
+    });
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="gantt-legend">'
       + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AEI + '"></div>AEI Lanzamiento</div>'
       + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AMG + ';opacity:0.7"></div>AMG Piezas</div>'
       + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AMG + '"></div>AMG Promo</div>'
       + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AGC + '"></div>AGC Ventas</div>'
       + '<div class="legend-item"><div class="legend-swatch" style="background:' + AREA_COLORS.AEC + '"></div>AEC Clases</div>'
+      + '<div class="legend-item"><div style="width:2px;height:14px;background:#DB0B5B"></div>Hoy</div>'
       + '</div>';
 
-    html += '<div class="gantt-wrap"><div class="gantt">';
-    html += '<div class="gantt-header"><div>Producto</div><div class="gantt-dates"><span>' + minDate.toLocaleDateString('es-PE',{month:'short',day:'numeric'}) + '</span><span>' + maxDate.toLocaleDateString('es-PE',{month:'short',day:'numeric'}) + '</span></div></div>';
+    if (!visibleRecords.length) {
+      html += '<div class="dash-empty" style="padding:3rem 2rem"><div style="font-size:32px;opacity:0.3;margin-bottom:0.5rem">🔍</div><h3 style="font-size:14px">Sin resultados</h3><p style="font-size:12px">No hay productos que coincidan con los filtros.</p></div>';
+      el.innerHTML = html;
+      attachGanttHandlers();
+      return;
+    }
 
-    records.forEach(function(r) {
+    html += '<div class="gantt-wrap" id="ganttExportArea"><div class="gantt" style="min-width:' + minWidth + 'px">';
+
+    html += '<div class="gantt-axis-row">';
+    html += '<div class="gantt-side-col"><div class="gantt-side-header">Producto / Etapa actual</div></div>';
+    html += '<div class="gantt-axis">';
+    markers.forEach(function(m) {
+      var p = pct(m);
+      html += '<div class="gantt-axis-mark" style="left:' + p + '%"><div class="gantt-axis-line"></div><div class="gantt-axis-label">' + markerLabel(m) + '</div></div>';
+    });
+    if (todayInRange) {
+      html += '<div class="gantt-today-line" style="left:' + todayPctRaw + '%"><div class="gantt-today-label">HOY · ' + today.toLocaleDateString('es-PE',{day:'numeric',month:'short'}) + '</div></div>';
+    }
+    html += '</div></div>';
+
+    visibleRecords.forEach(function(r) {
+      var cur = getCurrentStage(r);
+      var stageColor = cur.stage.color;
+      var stageLabel = cur.stage.label;
+      var lateBadge = cur.isLate ? '<span class="gantt-late-badge">⚠ ATRASADO</span>' : '';
+      var daysBadge = '';
+      if (cur.daysLeft !== null && cur.daysLeft !== undefined && cur.stage.id !== 'completado' && cur.stage.id !== 'sindatos' && cur.stage.id !== 'porempezar') {
+        if (cur.daysLeft > 0) daysBadge = '<span class="gantt-days-badge">' + cur.daysLeft + 'd</span>';
+        else if (cur.daysLeft === 0) daysBadge = '<span class="gantt-days-badge" style="background:#fff4e0;color:#a05000">Hoy</span>';
+      }
+
       html += '<div class="gantt-product-row">';
-      html += '<div><div class="gantt-product-name" title="' + esc(r.nombre_producto) + '">' + esc(r.nombre_producto || '—') + '</div><div class="gantt-product-code">' + esc(r.cod_producto || '') + '</div></div>';
+      html += '<div class="gantt-side-col">';
+      html += '<div class="gantt-product-name" title="' + esc(r.nombre_producto) + '">' + esc(r.nombre_producto || '—') + '</div>';
+      html += '<div class="gantt-product-code">' + esc(r.cod_producto || '') + '</div>';
+      html += '<div class="gantt-stage-tag" style="background:' + stageColor + '18;color:' + stageColor + ';border-color:' + stageColor + '40">' + esc(stageLabel) + ' ' + daysBadge + lateBadge + '</div>';
+      html += '</div>';
+      html += '<div class="gantt-tracks-area">';
+      markers.forEach(function(m) {
+        var p = pct(m);
+        if (p > 0 && p < 100) html += '<div class="gantt-grid-line" style="left:' + p + '%"></div>';
+      });
+      if (todayInRange) {
+        html += '<div class="gantt-today-line-row" style="left:' + todayPctRaw + '%"></div>';
+      }
       html += '<div class="gantt-tracks">';
 
+      function buildBar(start, end, color, label, stageId) {
+        if (!start) return '';
+        var p1 = pct(start);
+        if (p1 === null) return '';
+        if (end) {
+          var p2 = pct(end);
+          if (p2 === null) return '';
+          var width = Math.max(p2 - p1, 0.5);
+          var stD = new Date(start);
+          var enD = new Date(end);
+          var progressPct = 0;
+          if (today < stD) progressPct = 0;
+          else if (today > enD) progressPct = 100;
+          else progressPct = ((today - stD) / (enD - stD)) * 100;
+
+          var isOverdue = today > enD;
+          var statusFinalized = false;
+          if (stageId === 'pauta') statusFinalized = r.estado_amg === 'Promocionado';
+          else if (stageId === 'ventas') statusFinalized = r.estado_agc === 'Finalizado';
+          else if (stageId === 'clases') statusFinalized = r.estado_aec === 'Finalizado';
+          else if (stageId === 'piezas') statusFinalized = !!r.fecha_fin_piezas;
+          var lateColor = isOverdue && !statusFinalized;
+
+          var bgColor = lateColor ? '#DB0B5B' : color;
+          var tooltip = label + ': ' + start + ' → ' + end + (lateColor ? ' (atrasado)' : '');
+
+          var bar = '<div class="gantt-bar" style="left:' + p1 + '%;width:' + width + '%;background:' + bgColor + '" title="' + esc(tooltip) + '">';
+          if (progressPct > 0 && progressPct < 100 && !lateColor) {
+            bar += '<div class="gantt-bar-progress-line" style="left:' + progressPct + '%"></div>';
+            bar += '<div class="gantt-bar-future" style="left:' + progressPct + '%;width:' + (100-progressPct) + '%"></div>';
+          }
+          if (width > 6) bar += '<span class="gantt-bar-text">' + label + '</span>';
+          bar += '</div>';
+          return bar;
+        } else {
+          var remaining = Math.max(100 - p1, 2);
+          return '<div class="gantt-bar dashed" style="left:' + p1 + '%;width:' + remaining + '%;background:' + color + '" title="' + esc(label + ' en curso desde ' + start) + '">' + (remaining > 6 ? '<span class="gantt-bar-text">' + label + ' (en curso)</span>' : '') + '</div>';
+        }
+      }
+
+      html += '<div class="gantt-track">';
       var aeiPct = pct(r.fecha_lanzamiento);
-      html += '<div class="gantt-track">';
-      if (aeiPct !== null) html += '<div class="gantt-milestone" style="left:calc(' + aeiPct + '% - 6px);background:' + AREA_COLORS.AEI + '" title="Lanzamiento: ' + r.fecha_lanzamiento + '"></div>';
-      html += '</div>';
-
-      var p1 = pct(r.fecha_inicio_piezas), p2 = pct(r.fecha_fin_piezas);
-      html += '<div class="gantt-track">';
-      if (p1 !== null) {
-        if (p2 !== null) html += '<div class="gantt-bar" style="left:' + p1 + '%;width:' + Math.max(p2-p1,1) + '%;background:' + AREA_COLORS.AMG + ';opacity:0.7">Piezas</div>';
-        else html += '<div class="gantt-bar dashed" style="left:' + p1 + '%;width:' + Math.max(100-p1,2) + '%;background:' + AREA_COLORS.AMG + ';opacity:0.7">Piezas (en curso)</div>';
+      if (aeiPct !== null) {
+        html += '<div class="gantt-milestone" style="left:calc(' + aeiPct + '% - 7px);background:' + AREA_COLORS.AEI + '" title="Lanzamiento: ' + r.fecha_lanzamiento + '"></div>';
       }
       html += '</div>';
 
-      var pp1 = pct(r.fecha_inicio_pauta), pp2 = pct(r.fecha_fin_pauta);
-      html += '<div class="gantt-track">';
-      if (pp1 !== null) {
-        if (pp2 !== null) html += '<div class="gantt-bar" style="left:' + pp1 + '%;width:' + Math.max(pp2-pp1,1) + '%;background:' + AREA_COLORS.AMG + '">Pauta</div>';
-        else html += '<div class="gantt-bar dashed" style="left:' + pp1 + '%;width:' + Math.max(100-pp1,2) + '%;background:' + AREA_COLORS.AMG + '">Pauta (en curso)</div>';
-      }
-      html += '</div>';
+      html += '<div class="gantt-track">' + buildBar(r.fecha_inicio_piezas, r.fecha_fin_piezas, AREA_COLORS.AMG, 'Piezas', 'piezas') + '</div>';
+      html += '<div class="gantt-track">' + buildBar(r.fecha_inicio_pauta, r.fecha_fin_pauta, AREA_COLORS.AMG, 'Pauta', 'pauta') + '</div>';
+      html += '<div class="gantt-track">' + buildBar(r.fecha_inicio_ventas, r.fecha_fin_ventas, AREA_COLORS.AGC, 'Ventas', 'ventas') + '</div>';
+      html += '<div class="gantt-track">' + buildBar(r.fecha_inicio_clases, r.fecha_fin_clases, AREA_COLORS.AEC, 'Clases', 'clases') + '</div>';
 
-      var v1 = pct(r.fecha_inicio_ventas), v2 = pct(r.fecha_fin_ventas);
-      html += '<div class="gantt-track">';
-      if (v1 !== null) {
-        if (v2 !== null) html += '<div class="gantt-bar" style="left:' + v1 + '%;width:' + Math.max(v2-v1,1) + '%;background:' + AREA_COLORS.AGC + '">Ventas</div>';
-        else html += '<div class="gantt-bar dashed" style="left:' + v1 + '%;width:' + Math.max(100-v1,2) + '%;background:' + AREA_COLORS.AGC + '">Ventas (en curso)</div>';
-      }
-      html += '</div>';
-
-      var c1 = pct(r.fecha_inicio_clases), c2 = pct(r.fecha_fin_clases);
-      html += '<div class="gantt-track">';
-      if (c1 !== null) {
-        if (c2 !== null) html += '<div class="gantt-bar" style="left:' + c1 + '%;width:' + Math.max(c2-c1,1) + '%;background:' + AREA_COLORS.AEC + '">Clases</div>';
-        else html += '<div class="gantt-bar dashed" style="left:' + c1 + '%;width:' + Math.max(100-c1,2) + '%;background:' + AREA_COLORS.AEC + '">Clases (en curso)</div>';
-      }
-      html += '</div>';
-
-      html += '</div></div>';
+      html += '</div></div></div>';
     });
 
     html += '</div></div>';
-    html += '<div style="font-size:11px;color:var(--text-hint);margin-top:1rem">💡 Barras sólidas = periodo cerrado. Barras rayadas = en curso. Rombos = hito puntual.</div>';
+
+    html += '<div style="font-size:11px;color:var(--text-hint);margin-top:1rem;display:flex;gap:14px;flex-wrap:wrap">'
+      + '<div>💡 La parte sólida muestra el avance, la parte clara lo pendiente.</div>'
+      + '<div>🔴 Rojo = etapa atrasada.</div>'
+      + '<div>◆ Rombo = hito puntual.</div>'
+      + '</div>';
 
     el.innerHTML = html;
+    attachGanttHandlers();
+  }
+
+  function attachGanttHandlers() {
+    var el = document.getElementById('dashGantt');
+    el.querySelectorAll('[data-zoom]').forEach(function(b) {
+      b.addEventListener('click', function() { window._gantt.zoom = this.getAttribute('data-zoom'); renderDashGantt(); });
+    });
+    el.querySelectorAll('[data-filter]').forEach(function(b) {
+      b.addEventListener('click', function() { window._gantt.filter = this.getAttribute('data-filter'); renderDashGantt(); });
+    });
+    el.querySelectorAll('[data-sort]').forEach(function(b) {
+      b.addEventListener('click', function() { window._gantt.sort = this.getAttribute('data-sort'); renderDashGantt(); });
+    });
+    var exportBtn = document.getElementById('ganttExportBtn');
+    if (exportBtn) exportBtn.addEventListener('click', exportGanttPNG);
+  }
+
+  function exportGanttPNG() {
+    var btn = document.getElementById('ganttExportBtn');
+    var originalText = btn.textContent;
+    btn.textContent = '⏳ Generando...';
+    btn.disabled = true;
+    function doExport() {
+      var area = document.getElementById('ganttExportArea');
+      html2canvas(area, { backgroundColor: '#ffffff', scale: 2 }).then(function(canvas) {
+        var link = document.createElement('a');
+        link.download = 'gantt-' + new Date().toISOString().split('T')[0] + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        btn.textContent = originalText;
+        btn.disabled = false;
+        toast('✓ Imagen descargada', 'success');
+      }).catch(function() {
+        btn.textContent = originalText;
+        btn.disabled = false;
+        toast('Error al exportar', 'error');
+      });
+    }
+    if (typeof html2canvas === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      script.onload = doExport;
+      script.onerror = function() {
+        btn.textContent = originalText;
+        btn.disabled = false;
+        toast('No se pudo cargar la librería', 'error');
+      };
+      document.head.appendChild(script);
+    } else {
+      doExport();
+    }
   }
 
   function renderDashDetalle(r) {
